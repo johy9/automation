@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "./modules/vpc"
+  source = "git::https://github.com/oyegokeodev/automation.git//modules/vpc?ref=v1.0.0"
 
   vpc_cidr            = var.vpc_cidr
   project_name        = var.project_name
