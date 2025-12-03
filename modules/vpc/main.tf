@@ -4,17 +4,11 @@ resource "aws_vpc" "this" {
   enable_dns_support   = "true"
 
   tags = merge(
+    var.additional_tags,
     {
       Name = "${var.project_name}-vpc"
-    },
-    var.additional_tags
+    }
   )
-
-  lifecycle {
-    ignore_changes = [
-      tags,
-    ]
-  }
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -22,10 +16,10 @@ resource "aws_internet_gateway" "igw" {
     vpc_id = aws_vpc.this.id
 
     tags = merge(
+      var.additional_tags,
       {
         Name = "${var.project_name}-igw"
-      },
-      var.additional_tags
+      }
     )
 }
 
@@ -33,10 +27,10 @@ resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.this.id
 
   tags = merge(
+    var.additional_tags,
     {
       Name = "${var.project_name}-public-rt"
-    },
-    var.additional_tags
+    }
   )
 }
 
@@ -54,11 +48,11 @@ resource "aws_subnet" "public" {
     availability_zone = var.availability_zone[count.index]
     map_public_ip_on_launch = true
     tags = merge(
+      var.additional_tags,
+      var.public_subnet_tags,
       {
         Name = "${var.project_name}-public-subnet-${count.index + 1}"
-      },
-      var.public_subnet_tags,
-      var.additional_tags
+      }
     )
 }
 
@@ -74,10 +68,10 @@ resource "aws_eip" "nat" {
   depends_on = [aws_internet_gateway.igw]
 
     tags = merge(
+      var.additional_tags,
       {
         Name = "${var.project_name}-nat-eip-${count.index + 1}"
-      },
-      var.additional_tags
+      }
     )
   
 }
@@ -88,10 +82,10 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[count.index].id
 
   tags = merge(
+    var.additional_tags,
     {
       Name = "${var.project_name}-nat-gateway-${count.index + 1}"
-    },
-    var.additional_tags
+    }
   )
 }
 
@@ -102,11 +96,11 @@ resource "aws_subnet" "private" {
   availability_zone = var.availability_zone[count.index]
   
   tags = merge(
+      var.additional_tags,
+      var.private_subnet_tags,
       {
         Name = "${var.project_name}-private-subnet-${count.index + 1}"
-      },
-      var.private_subnet_tags,
-      var.additional_tags
+      }
     )
 }
 
@@ -115,10 +109,10 @@ resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.this.id
 
   tags = merge(
+    var.additional_tags,
     {
       Name = "${var.project_name}-private-rt-${count.index + 1}"
-    },
-    var.additional_tags
+    }
   )
 }
 
