@@ -52,3 +52,17 @@ We enforce **standardized module conventions** to maintain code quality and reus
 
 1.  **Branching:** Use a feature branch for all changes (e.g., `feat/add-new-module`).
 2.  **PRs:** All changes must be reviewed and approved via a **Pull Request** before merging into the main branch and creating a tag
+
+## Referencing modules by git tag
+
+When consuming modules from this repository via Git (instead of the Terraform Registry), include the repository URL, the module subdirectory and a `ref` query parameter. The `ref` value may be a branch name, a tag, or a commit SHA. It's recommended to use tags for reproducible builds.
+
+Example (HTTPS, using a tag):
+
+```hcl
+module "module_name" {
+  source = "git::https://github.com/RingCentral-Pro-Services/psi-terraform.git//modules/vpc?ref=v1.2.0"
+
+  # module input variables (example)
+}
+```
