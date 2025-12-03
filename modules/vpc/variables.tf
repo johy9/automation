@@ -58,3 +58,13 @@ variable "single_nat_gateway" {
   type        = bool
   default     = true
 }
+
+variable "additional_tags" {
+  description = "Additional tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
+  validation {
+    condition     = can(var.additional_tags["Environment"]) && can(var.additional_tags["Owner"]) && can(var.additional_tags["Project"])
+    error_message = "Tags must contain at least 'Environment', 'Owner', and 'Project' keys."
+  }
+}

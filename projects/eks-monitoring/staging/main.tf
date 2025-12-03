@@ -12,13 +12,17 @@ module "vpc" {
   enable_nat_gateway  = true
   create_igw          = true
 
+  additional_tags = {
+    Environment = "staging"
+    Owner       = "DevOps"
+    Project     = "eks-monitoring"
+  }
+
   public_subnet_tags = {
     "kubernetes.io/role/elb" = "1"
-    "Environment"            = "staging"
   }
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
-    "Environment"                     = "staging"
   }
 }

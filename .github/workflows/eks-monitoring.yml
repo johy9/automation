@@ -1,0 +1,92 @@
+name: EKS Monitoring Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'projects/eks-monitoring/**'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Determine Environment
+        id: env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "ENVIRONMENT=prod" >> $GITHUB_OUTPUT
+            echo "WORKING_DIR=projects/eks-monitoring/prod" >> $GITHUB_OUTPUT
+          else
+            echo "ENVIRONMENT=staging" >> $GITHUB_OUTPUT
+            echo "WORKING_DIR=projects/eks-monitoring/staging" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1 # Update this to your region
+          # You need to set these secrets in your GitHub Repo
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.44.1
+
+      - name: Terraform Format
+        working-directory: ${{ steps.env.outputs.WORKING_DIR }}
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        working-directory: ${{ steps.env.outputs.WORKING_DIR }}
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: ${{ steps.env.outputs.WORKING_DIR }}
+        run: terraform validate
+
+      - name: Run TFLint
+        working-directory: ${{ steps.env.outputs.WORKING_DIR }}
+        run: tflint
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: ${{ steps.env.outputs.WORKING_DIR }}
+        run: |
+          terraform plan -no-color -out=tfplan
+          terraform show -no-color tfplan > tfplan.txt
+
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plan-${{ steps.env.outputs.ENVIRONMENT }}
+          path: ${{ steps.env.outputs.WORKING_DIR }}/tfplan.txt
+
+      - name: Terraform Apply
+        if: github.event_name == 'workflow_dispatch' && inputs.action == 'apply'
+        working-directory: ${{ steps.env.outputs.WORKING_DIR }}
+        run: terraform apply -auto-approve tfplan
