@@ -1,0 +1,164 @@
+name: Internal PSI Monitoring
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'projects/internal-psi-monitoring/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'projects/internal-psi-monitoring/**'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Terraform Action'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+      environment:
+        description: 'Target Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      branch:
+        description: 'Branch to checkout'
+        required: true
+        default: 'main'
+        type: string
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+
+jobs:
+  staging:
+    name: Staging
+    runs-on: ubuntu-latest
+    # Run if not 'production' only dispatch
+    if: github.event_name != 'workflow_dispatch' || github.event.inputs.environment != 'production'
+    defaults:
+      run:
+        working-directory: projects/internal-psi-monitoring/staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: us-east-1
+          # Assuming you are using OIDC or Secrets. 
+          # If using secrets, uncomment the lines below:
+          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # If using OIDC (Recommended), use role-to-assume:
+          # role-to-assume: arn:aws:iam::ACCOUNT_ID:role/GITHUB_ACTION_ROLE
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      # Best Practice: Check if the code is formatted correctly
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      # Best Practice: Validate the configuration files
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      # Plan (Normal) - Runs on PR, Push, or Manual Plan/Apply
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'destroy')
+        run: terraform plan -out=tfplan -input=false
+
+      # Plan (Destroy) - Runs only on Manual Destroy
+      - name: Terraform Plan (Destroy)
+        id: plan-destroy
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        run: terraform plan -destroy -out=tfplan -input=false
+
+      # Apply - Runs only on Manual Apply or Destroy
+      - name: Terraform Apply
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        run: terraform apply -auto-approve -input=false tfplan
+
+  prod:
+    name: Production
+    needs: staging
+    runs-on: ubuntu-latest
+    # Run if Staging succeeded or was skipped (due to targeting production), AND we are not targeting 'staging' only
+    if: |
+      always() && 
+      (needs.staging.result == 'success' || needs.staging.result == 'skipped') && 
+      (github.event_name != 'workflow_dispatch' || github.event.inputs.environment != 'staging')
+    # Use 'environment' to configure manual approval protection rules in GitHub Repo Settings
+    environment: production 
+    defaults:
+      run:
+        working-directory: projects/internal-psi-monitoring/prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: us-east-1
+          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      # Best Practice: Check if the code is formatted correctly
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      # Best Practice: Validate the configuration files
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      # Plan (Normal) - Runs on PR, Push, or Manual Plan/Apply
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.action != 'destroy')
+        run: terraform plan -out=tfplan -input=false
+
+      # Plan (Destroy) - Runs only on Manual Destroy
+      - name: Terraform Plan (Destroy)
+        id: plan-destroy
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        run: terraform plan -destroy -out=tfplan -input=false
+
+      # Apply - Runs only on Manual Apply or Destroy
+      - name: Terraform Apply
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        run: terraform apply -auto-approve -input=false tfplan
