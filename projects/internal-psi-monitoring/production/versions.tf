@@ -8,15 +8,15 @@ terraform {
 
   required_version = ">= 1.5.0"
 
-#   backend "s3" {
-#     bucket         = "REPLACE_WITH_YOUR_BUCKET_NAME"
-#     key            = "eks-monitoring/prod/terraform.tfstate"
-#     region         = "us-east-1"
-#     dynamodb_table = "REPLACE_WITH_YOUR_DYNAMODB_TABLE"
-#     encrypt        = true
-#   }
+  backend "s3" {
+    bucket       = "oyegokeodev-terraform-states"
+    key          = "internal-psi-monitoring/production/terraform.tfstate"
+    region       = "us-east-2"
+    use_lockfile = true
+    encrypt      = true
+  }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }
