@@ -28,11 +28,6 @@ on:
         options:
           - staging
           - production
-      branch:
-        description: 'Branch to checkout'
-        required: true
-        default: 'main'
-        type: string
 
 permissions:
   id-token: write # This is required for requesting the JWT
@@ -50,8 +45,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.inputs.branch }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -92,12 +85,12 @@ jobs:
       # Plan (Destroy) - Runs only on Manual Destroy
       - name: Terraform Plan (Destroy)
         id: plan-destroy
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
         run: terraform plan -destroy -out=tfplan -input=false
 
       # Apply - Runs only on Manual Apply or Destroy
       - name: Terraform Apply
-        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
         run: terraform apply -auto-approve -input=false tfplan
 
   prod:
@@ -117,8 +110,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.inputs.branch }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -155,10 +146,10 @@ jobs:
       # Plan (Destroy) - Runs only on Manual Destroy
       - name: Terraform Plan (Destroy)
         id: plan-destroy
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
         run: terraform plan -destroy -out=tfplan -input=false
 
       # Apply - Runs only on Manual Apply or Destroy
       - name: Terraform Apply
-        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && (github.event.inputs.branch == 'main' || github.event.inputs.branch == 'develop')
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
         run: terraform apply -auto-approve -input=false tfplan
