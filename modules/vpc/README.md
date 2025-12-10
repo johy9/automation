@@ -104,3 +104,28 @@ module "vpc" {
 | `private_subnet_ids` | List of IDs of private subnets. |
 | `nat_gateway_ids` | List of IDs of NAT Gateways. |
 | `internet_gateway_id` | The ID of the Internet Gateway (or null). |
+
+## CI/CD Workflow
+
+This project uses GitHub Actions for Continuous Integration and Deployment. The workflow is defined in `.github/workflows/internal-psi-monitoring.yaml`.
+
+### Workflow Steps
+1.  **Plan**: Triggered on Pull Requests, Pushes to main, or manually via `workflow_dispatch`.
+2.  **Apply**: Triggered manually via `workflow_dispatch` (requires `plan` to be successful).
+
+### Configuration & Secrets
+
+To ensure security and flexibility, sensitive or environment-specific variables are managed via GitHub Secrets and Variables.
+
+#### 1. AWS Credentials (Secrets)
+You must configure the following **Repository Secrets** to allow Terraform to authenticate with AWS:
+*   `AWS_ACCESS_KEY_ID`: Your AWS Access Key.
+*   `AWS_SECRET_ACCESS_KEY`: Your AWS Secret Key.
+
+#### 2. Terraform Variables (Repository Variables)
+If you choose **not** to commit your `terraform.tfvars` file to the repository (recommended for security), you must provide the content of these files via **Repository Variables**. The pipeline will automatically inject these variables into a `terraform.tfvars` file during the build process.
+
+*   **`STAGING_TFVARS`**: Paste the entire content of your staging `terraform.tfvars` file here.
+*   **`PROD_TFVARS`**: Paste the entire content of your production `terraform.tfvars` file here.
+
+**Note:** If a `terraform.tfvars` file exists in the repository, the pipeline will use it. The Repository Variable injection only happens if the file is missing.
