@@ -2,7 +2,7 @@ module "vpc" {
   source = "../../../modules/vpc"
 
   project_name        = var.project_name
-  environment         = "staging"
+  environment         = var.environment
   vpc_cidr            = var.vpc_cidr
   availability_zone   = var.availability_zone
   public_subnet_cidr  = var.public_subnet_cidr
@@ -16,7 +16,7 @@ module "vpc" {
   additional_tags = {
     Environment = "staging"
     Owner       = "DevOps"
-    Project     = "eks-monitoring"
+    Project     = "internal-psi-monitoring"
   }
 
   public_subnet_tags = {

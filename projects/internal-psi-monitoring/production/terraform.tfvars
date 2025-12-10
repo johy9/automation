@@ -1,4 +1,4 @@
-project_name        = "eks-monitoring-prod"
+project_name        = "internal-psi-monitoring"
 vpc_cidr            = "10.20.0.0/21" # Different CIDR for Prod to avoid confusion
 availability_zone   = ["us-east-2a", "us-east-2b", "us-east-2c"]
 
