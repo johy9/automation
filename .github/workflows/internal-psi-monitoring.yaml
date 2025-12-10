@@ -1,15 +1,6 @@
 name: Internal PSI Monitoring
 
 on:
-  # ... (Triggers remain the same) ...
-  push:
-    branches: [ main ]
-    paths:
-      - 'projects/internal-psi-monitoring/**'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'projects/internal-psi-monitoring/**'
   workflow_dispatch:
     inputs:
       action:

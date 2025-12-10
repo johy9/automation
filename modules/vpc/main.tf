@@ -21,7 +21,7 @@ resource "aws_vpc" "this" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-vpc"
+      Name = "${var.project_name}-${var.environment}-vpc"
     }
   )
 }
@@ -33,7 +33,7 @@ resource "aws_internet_gateway" "igw" {
     tags = merge(
       var.additional_tags,
       {
-        Name = "${var.project_name}-igw"
+        Name = "${var.project_name}-${var.environment}-igw"
       }
     )
 }
@@ -44,7 +44,7 @@ resource "aws_route_table" "public_rt" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-public-rt"
+      Name = "${var.project_name}-${var.environment}-public-rt"
     }
   )
 }
@@ -66,7 +66,7 @@ resource "aws_subnet" "public" {
       var.additional_tags,
       var.public_subnet_tags,
       {
-        Name = "${var.project_name}-public-subnet-${count.index + 1}"
+        Name = "${var.project_name}-${var.environment}-public-subnet-${count.index + 1}"
       }
     )
 }
@@ -85,7 +85,7 @@ resource "aws_eip" "nat" {
     tags = merge(
       var.additional_tags,
       {
-        Name = "${var.project_name}-nat-eip-${count.index + 1}"
+        Name = "${var.project_name}-${var.environment}-nat-eip-${count.index + 1}"
       }
     )
   
@@ -99,7 +99,7 @@ resource "aws_nat_gateway" "main" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-nat-gateway-${count.index + 1}"
+      Name = "${var.project_name}-${var.environment}-nat-gateway-${count.index + 1}"
     }
   )
 }
@@ -114,7 +114,7 @@ resource "aws_subnet" "private" {
       var.additional_tags,
       var.private_subnet_tags,
       {
-        Name = "${var.project_name}-private-subnet-${count.index + 1}"
+        Name = "${var.project_name}-${var.environment}-private-subnet-${count.index + 1}"
       }
     )
 }
@@ -126,7 +126,7 @@ resource "aws_route_table" "private_rt" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-private-rt-${count.index + 1}"
+      Name = "${var.project_name}-${var.environment}-private-rt-${count.index + 1}"
     }
   )
 }
