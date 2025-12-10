@@ -1,7 +1,7 @@
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
-  enable_dns_hostnames = "true"
-  enable_dns_support   = "true"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = merge(
     var.additional_tags,
@@ -129,3 +129,15 @@ resource "aws_route_table_association" "private_assoc" {
   route_table_id = aws_route_table.private_rt[count.index].id
 }
 
+resource "null_resource" "validate_counts" {
+  count = 1
+
+  lifecycle {
+    prevent_destroy = true
+    # Precondition will fail plan/apply with a clear diagnostic if counts mismatch
+    precondition {
+      condition     = length(var.availability_zone) >= max(length(var.public_subnet_cidr), length(var.private_subnet_cidr))
+      error_message = "The number of availability_zones must be >= the number of public/private subnets. Ensure var.availability_zone length covers subnet lists."
+    }
+  }
+}
