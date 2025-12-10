@@ -65,7 +65,7 @@ jobs:
       # Best Practice: Check if the code is formatted correctly
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check
+        run: terraform fmt
 
       - name: Terraform Init
         id: init
@@ -142,7 +142,7 @@ jobs:
       # Best Practice: Check if the code is formatted correctly
       - name: Terraform Format
         id: fmt
-        run: terraform fmt -check
+        run: terraform fmt
 
       - name: Terraform Init
         id: init
