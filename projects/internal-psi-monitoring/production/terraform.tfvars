@@ -1,6 +1,6 @@
 project_name        = "eks-monitoring-prod"
 vpc_cidr            = "10.20.0.0/21" # Different CIDR for Prod to avoid confusion
-availability_zone   = ["us-east-1a", "us-east-1b", "us-east-1c"]
+availability_zone   = ["us-east-2a", "us-east-2b", "us-east-2c"]
 
 # Public Subnets (/26 = 64 IPs)
 public_subnet_cidr  = ["10.20.0.0/26", "10.20.0.64/26", "10.20.0.128/26"]
