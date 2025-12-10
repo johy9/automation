@@ -87,6 +87,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           # ---------------------------------
+          # --- IAM ROLE AUTHENTICATION (OIDC) ---
+          # To use OIDC, uncomment the line below and comment out the access keys above.
+          # role-to-assume: arn:aws:iam::123456789012:role/my-github-actions-role
+          # --------------------------------------
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
