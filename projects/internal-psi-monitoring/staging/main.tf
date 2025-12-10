@@ -6,11 +6,11 @@ module "vpc" {
   availability_zone   = var.availability_zone
   public_subnet_cidr  = var.public_subnet_cidr
   private_subnet_cidr = var.private_subnet_cidr
-  
+
   # Staging: Save money with Single NAT Gateway
-  single_nat_gateway  = true
-  enable_nat_gateway  = true
-  create_igw          = true
+  single_nat_gateway = true
+  enable_nat_gateway = true
+  create_igw         = true
 
   additional_tags = {
     Environment = "staging"

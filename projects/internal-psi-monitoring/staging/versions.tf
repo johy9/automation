@@ -8,13 +8,13 @@ terraform {
 
   required_version = ">= 1.5.0"
 
-#   backend "s3" {
-#     bucket         = "REPLACE_WITH_YOUR_BUCKET_NAME"
-#     key            = "eks-monitoring/staging/terraform.tfstate"
-#     region         = "us-east-1"
-#     dynamodb_table = "REPLACE_WITH_YOUR_DYNAMODB_TABLE"
-#     encrypt        = true
-#   }
+  #   backend "s3" {
+  #     bucket         = "REPLACE_WITH_YOUR_BUCKET_NAME"
+  #     key            = "eks-monitoring/staging/terraform.tfstate"
+  #     region         = "us-east-1"
+  #     dynamodb_table = "REPLACE_WITH_YOUR_DYNAMODB_TABLE"
+  #     encrypt        = true
+  #   }
 }
 
 provider "aws" {
