@@ -88,6 +88,22 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
         run: terraform plan -destroy -out=tfplan -input=false
 
+      - name: Generate Timestamp
+        id: timestamp
+        if: always()
+        run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
+
+      - name: Convert Plan to JSON
+        if: steps.plan.outcome == 'success' || steps.plan-destroy.outcome == 'success'
+        run: terraform show -json tfplan > internal-psi-monitoring-staging_${{ steps.timestamp.outputs.timestamp }}.json
+
+      - name: Upload Plan JSON
+        if: steps.plan.outcome == 'success' || steps.plan-destroy.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: plan-staging-${{ steps.timestamp.outputs.timestamp }}
+          path: projects/internal-psi-monitoring/staging/internal-psi-monitoring-staging_${{ steps.timestamp.outputs.timestamp }}.json
+
       # Apply - Runs only on Manual Apply or Destroy
       - name: Terraform Apply
         if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
@@ -148,6 +164,22 @@ jobs:
         id: plan-destroy
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
         run: terraform plan -destroy -out=tfplan -input=false
+
+      - name: Generate Timestamp
+        id: timestamp
+        if: always()
+        run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
+
+      - name: Convert Plan to JSON
+        if: steps.plan.outcome == 'success' || steps.plan-destroy.outcome == 'success'
+        run: terraform show -json tfplan > internal-psi-monitoring-prod_${{ steps.timestamp.outputs.timestamp }}.json
+
+      - name: Upload Plan JSON
+        if: steps.plan.outcome == 'success' || steps.plan-destroy.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: plan-prod-${{ steps.timestamp.outputs.timestamp }}
+          path: projects/internal-psi-monitoring/prod/internal-psi-monitoring-prod_${{ steps.timestamp.outputs.timestamp }}.json
 
       # Apply - Runs only on Manual Apply or Destroy
       - name: Terraform Apply
