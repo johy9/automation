@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "../../../modules/vpc"
+  source = "git::https://github.com/RingCentral-Pro-Services/psi-terraform.git//modules/vpc?ref=v1.0.0-vpc"
 
   project_name        = var.project_name
   environment         = var.environment

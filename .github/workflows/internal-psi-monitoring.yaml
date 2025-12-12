@@ -1,5 +1,7 @@
 name: Internal PSI Monitoring
 
+run-name: "Action ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.action || github.event_name }} - internal-psi-monitoring - Env ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.environment || github.ref }} - #${{ github.run_number }}"
+
 on:
   workflow_dispatch:
     inputs:
@@ -27,6 +29,7 @@ concurrency:
 
 permissions:
   contents: read # Only read permission is needed when using static secrets
+  id-token: write # Needed for OIDC to assume AWS Role
 
 jobs:
   # 1. Orchestration Job: Determines which environment(s) to run
@@ -83,14 +86,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4 # Using the latest v4
         with:
           aws-region: us-east-1
-          # --- STREAMLINED SECRET USAGE ---
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # ---------------------------------
-          # --- IAM ROLE AUTHENTICATION (OIDC) ---
-          # To use OIDC, uncomment the line below and comment out the access keys above.
-          # role-to-assume: arn:aws:iam::123456789012:role/my-github-actions-role
-          # --------------------------------------
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+      
+      - name: Configure Git
+        run: |
+          git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
