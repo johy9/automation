@@ -1,12 +1,27 @@
+# Validate that availability zones cover the number of subnets required
+resource "null_resource" "validate_counts" {
+  count = 1
+
+  lifecycle {
+    prevent_destroy = false
+
+    # Precondition will fail plan/apply with a clear diagnostic if counts mismatch
+    precondition {
+      condition     = length(var.availability_zone) >= max(length(var.public_subnet_cidr), length(var.private_subnet_cidr))
+      error_message = "The number of availability_zones must be >= the number of public/private subnets"
+    }
+  }
+}
+
 resource "aws_vpc" "this" {
   cidr_block           = var.vpc_cidr
-  enable_dns_hostnames = "true"
-  enable_dns_support   = "true"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-vpc"
+      Name = "${var.project_name}-${var.environment}-vpc"
     }
   )
 }
@@ -18,7 +33,7 @@ resource "aws_internet_gateway" "igw" {
     tags = merge(
       var.additional_tags,
       {
-        Name = "${var.project_name}-igw"
+        Name = "${var.project_name}-${var.environment}-igw"
       }
     )
 }
@@ -29,7 +44,7 @@ resource "aws_route_table" "public_rt" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-public-rt"
+      Name = "${var.project_name}-${var.environment}-public-rt"
     }
   )
 }
@@ -51,7 +66,7 @@ resource "aws_subnet" "public" {
       var.additional_tags,
       var.public_subnet_tags,
       {
-        Name = "${var.project_name}-public-subnet-${count.index + 1}"
+        Name = "${var.project_name}-${var.environment}-public-subnet-${count.index + 1}"
       }
     )
 }
@@ -70,7 +85,7 @@ resource "aws_eip" "nat" {
     tags = merge(
       var.additional_tags,
       {
-        Name = "${var.project_name}-nat-eip-${count.index + 1}"
+        Name = "${var.project_name}-${var.environment}-nat-eip-${count.index + 1}"
       }
     )
   
@@ -84,7 +99,7 @@ resource "aws_nat_gateway" "main" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-nat-gateway-${count.index + 1}"
+      Name = "${var.project_name}-${var.environment}-nat-gateway-${count.index + 1}"
     }
   )
 }
@@ -99,7 +114,7 @@ resource "aws_subnet" "private" {
       var.additional_tags,
       var.private_subnet_tags,
       {
-        Name = "${var.project_name}-private-subnet-${count.index + 1}"
+        Name = "${var.project_name}-${var.environment}-private-subnet-${count.index + 1}"
       }
     )
 }
@@ -111,7 +126,7 @@ resource "aws_route_table" "private_rt" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-private-rt-${count.index + 1}"
+      Name = "${var.project_name}-${var.environment}-private-rt-${count.index + 1}"
     }
   )
 }

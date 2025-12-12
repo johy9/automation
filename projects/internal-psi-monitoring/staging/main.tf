@@ -1,21 +1,22 @@
 module "vpc" {
-  source = "../../../modules/vpc"
+  source = "git::https://github.com/RingCentral-Pro-Services/psi-terraform.git//modules/vpc?ref=v1.0.0-vpc"
 
   project_name        = var.project_name
+  environment         = var.environment
   vpc_cidr            = var.vpc_cidr
   availability_zone   = var.availability_zone
   public_subnet_cidr  = var.public_subnet_cidr
   private_subnet_cidr = var.private_subnet_cidr
-  
+
   # Staging: Save money with Single NAT Gateway
-  single_nat_gateway  = true
-  enable_nat_gateway  = true
-  create_igw          = true
+  single_nat_gateway = true
+  enable_nat_gateway = true
+  create_igw         = true
 
   additional_tags = {
     Environment = "staging"
     Owner       = "DevOps"
-    Project     = "eks-monitoring"
+    Project     = "internal-psi-monitoring"
   }
 
   public_subnet_tags = {

@@ -13,6 +13,11 @@ variable "project_name" {
   default     = "learning-terraform"
 }
 
+variable "environment" {
+  description = "Environment name (e.g., staging, production)"
+  type        = string
+}
+
 variable "availability_zone" {
   description = "The list of availability zones"
   type = list(string)
