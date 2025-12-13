@@ -10,7 +10,7 @@ terraform {
 
   backend "s3" {
     bucket       = "ringcentral-terraform-states"
-    key          = "internal-psi-monitoring/staging/terraform.tfstate"
+    key          = "internal-psi-monitoring/production/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
     encrypt      = true
