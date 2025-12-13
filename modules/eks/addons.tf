@@ -7,14 +7,14 @@ data "aws_iam_policy_document" "ebs_csi_driver_assume_role" {
 
     principals {
       type        = "Federated"
-      identifiers = [aws_iam_openid_connect_provider.oidc_provider.arn]
+      identifiers = [aws_iam_openid_connect_provider.oidc_provider[0].arn]
     }
 
     actions = ["sts:AssumeRoleWithWebIdentity"]
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(aws_iam_openid_connect_provider.oidc_provider.url, "https://", "")}:sub"
+      variable = "${replace(aws_iam_openid_connect_provider.oidc_provider[0].url, "https://", "")}:sub"
       values   = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
     }
   }
@@ -28,7 +28,7 @@ resource "aws_iam_role" "ebs_csi_driver" {
     Version = "2012-10-17"
     Statement = [{
       Effect = "Allow"
-      Principal = { Federated = aws_iam_openid_connect_provider.oidc_provider.arn }
+      Principal = { Federated = aws_iam_openid_connect_provider.oidc_provider[0].arn }
       Action = "sts:AssumeRoleWithWebIdentity"
     }]
   }))

@@ -25,7 +25,7 @@ output "cluster_oidc_issuer_url" {
 
 output "oidc_provider_arn" {
   description = "The ARN of the OIDC Provider"
-  value       = try(aws_iam_openid_connect_provider.oidc_provider.arn, null)
+  value       = try(aws_iam_openid_connect_provider.oidc_provider[0].arn, null)
 }
 
 output "node_group_arns" {
