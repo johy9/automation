@@ -1,6 +1,6 @@
 module "vpc" {
-  source = "git::https://github.com/johy9/automation.git//modules/vpc?ref=v1.0.0-vpc"
-  # source = "git::https://github.com/RingCentral-Pro-Services/psi-terraform.git//modules/vpc?ref=v1.0.0-vpc"
+  source = "git::https://github.com/johy9/automation.git//modules/vpc?ref=v1.1.0-vpc"
+  # source = "../../../../modules/vpc"
 
   project_name        = var.project_name
   vpc_cidr            = var.vpc_cidr

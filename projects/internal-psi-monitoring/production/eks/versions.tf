@@ -11,12 +11,12 @@ terraform {
   backend "s3" {
     bucket       = "oyegokeodev-terraform-states"
     key          = "internal-psi-monitoring/production/eks/terraform.tfstate"
-    region       = "us-east-1"
+    region       = "us-east-2"
     use_lockfile = true
     encrypt      = true
   }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-2"
 }

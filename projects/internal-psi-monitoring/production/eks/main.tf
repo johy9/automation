@@ -3,7 +3,7 @@ data "terraform_remote_state" "vpc" {
   config = {
     bucket = "oyegokeodev-terraform-states"
     key    = "internal-psi-monitoring/production/vpc/terraform.tfstate"
-    region = "us-east-1"
+    region = "us-east-2"
   }
 }
 
