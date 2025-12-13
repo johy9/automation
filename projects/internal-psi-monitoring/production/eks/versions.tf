@@ -6,10 +6,10 @@ terraform {
     }
   }
 
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.11.0"
 
   backend "s3" {
-    bucket       = "ringcentral-terraform-states"
+    bucket       = "oyegokeodev-terraform-states"
     key          = "internal-psi-monitoring/production/eks/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
@@ -18,5 +18,5 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-2"
+  region = "us-east-1"
 }

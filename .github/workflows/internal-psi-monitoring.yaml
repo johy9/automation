@@ -89,11 +89,20 @@ jobs:
           ENV_UPPER=$(echo ${{ matrix.env }} | tr '[:lower:]' '[:upper:]')
           echo "tfvars_var_name=${ENV_UPPER}_TFVARS" >> $GITHUB_OUTPUT
           
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4 # Using the latest v4
+      # Option 1: Use IAM Role (OIDC) - Recommended for Company/Production
+      - name: Configure AWS Credentials (IAM Role)
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.AWS_ROLE }}
+
+      # Option 2: Use IAM User (Access Keys) - Uncomment for Personal/Testing
+      # - name: Configure AWS Credentials (IAM User)
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-region: us-east-1
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       
       - name: Configure Git
         run: |
