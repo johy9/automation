@@ -68,3 +68,37 @@ resource "aws_eks_cluster" "this" {
     }
   )
 }
+
+resource "aws_eks_access_entry" "this" {
+  for_each = var.access_entries
+
+  cluster_name      = aws_eks_cluster.this.name
+  principal_arn     = each.key
+  kubernetes_groups = each.value.kubernetes_groups
+  type              = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "this" {
+  for_each = {
+    for association in flatten([
+      for principal_arn, entry in var.access_entries : [
+        for policy_key, policy in entry.policy_associations : {
+          principal_arn = principal_arn
+          policy_arn    = policy.policy_arn
+          access_scope  = policy.access_scope
+          key           = "${principal_arn}-${policy.policy_arn}"
+        }
+      ]
+    ]) : association.key => association
+  }
+
+  cluster_name  = aws_eks_cluster.this.name
+  policy_arn    = each.value.policy_arn
+  principal_arn = each.value.principal_arn
+
+  access_scope {
+    type       = each.value.access_scope.type
+    namespaces = each.value.access_scope.namespaces
+  }
+}
+

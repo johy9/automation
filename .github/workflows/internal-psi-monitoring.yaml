@@ -87,6 +87,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       
+      - name: Get Caller Identity
+        run: |
+          ARN=$(aws sts get-caller-identity --query Arn --output text)
+          echo "TF_VAR_github_actions_role_arn=$ARN" >> $GITHUB_ENV
+
       - name: Configure Git
         run: |
           git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
@@ -162,6 +167,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       
+      - name: Get Caller Identity
+        run: |
+          ARN=$(aws sts get-caller-identity --query Arn --output text)
+          echo "TF_VAR_github_actions_role_arn=$ARN" >> $GITHUB_ENV
+
       - name: Configure Git
         run: |
           git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"

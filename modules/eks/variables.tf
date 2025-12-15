@@ -131,3 +131,18 @@ variable "enable_efs_driver" {
   type        = bool
   default     = false
 }
+
+variable "access_entries" {
+  description = "Map of access entries. Key is the principal ARN."
+  type = map(object({
+    kubernetes_groups = optional(list(string), [])
+    policy_associations = map(object({
+      policy_arn = string
+      access_scope = object({
+        type       = string
+        namespaces = optional(list(string))
+      })
+    }))
+  }))
+  default = {}
+}

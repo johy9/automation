@@ -13,3 +13,10 @@ variable "cluster_version" {
   type        = string
   default     = "1.32"
 }
+
+variable "github_actions_role_arn" {
+  description = "IAM Role ARN for GitHub Actions to grant cluster access"
+  type        = string
+  default     = null
+}
+

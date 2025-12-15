@@ -35,4 +35,5 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-vpc.yaml
+*.vpc.yaml
+*.game-2048.yaml

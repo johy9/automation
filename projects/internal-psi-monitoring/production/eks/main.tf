@@ -59,6 +59,20 @@ module "eks" {
   enable_external_dns  = true
   enable_efs_driver    = true
 
+  access_entries = var.github_actions_role_arn != null ? {
+    (var.github_actions_role_arn) = {
+      kubernetes_groups = []
+      policy_associations = {
+        cluster_admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  } : {}
+
   additional_tags = {
     psi_environment      = "production"
     psi_source_repo      = "psi-terraform"
