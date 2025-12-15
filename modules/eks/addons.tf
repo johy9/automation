@@ -1,7 +1,7 @@
 # IAM Role for EBS CSI Driver (IRSA)
 data "aws_iam_policy_document" "ebs_csi_driver_assume_role" {
   count = contains(keys(var.addons), "aws-ebs-csi-driver") ? 1 : 0
-  
+
   statement {
     effect = "Allow"
 
@@ -27,9 +27,9 @@ resource "aws_iam_role" "ebs_csi_driver" {
   assume_role_policy = try(data.aws_iam_policy_document.ebs_csi_driver_assume_role[0].json, jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect = "Allow"
+      Effect    = "Allow"
       Principal = { Federated = aws_iam_openid_connect_provider.oidc_provider[0].arn }
-      Action = "sts:AssumeRoleWithWebIdentity"
+      Action    = "sts:AssumeRoleWithWebIdentity"
     }]
   }))
 
@@ -51,19 +51,19 @@ resource "aws_eks_addon" "this" {
   # Only create add-ons if node groups are defined to avoid hanging in "Creating" state
   for_each = length(var.node_groups) > 0 ? var.addons : {}
 
-  cluster_name      = aws_eks_cluster.this.name
-  addon_name        = each.key
-  addon_version     = each.value.version
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = each.key
+  addon_version               = each.value.version
   resolve_conflicts_on_create = try(each.value.resolve_conflicts, "OVERWRITE")
   resolve_conflicts_on_update = try(each.value.resolve_conflicts, "OVERWRITE")
 
   # If the addon is EBS CSI Driver, attach the IRSA role
   service_account_role_arn = each.key == "aws-ebs-csi-driver" ? try(aws_iam_role.ebs_csi_driver[0].arn, null) : null
 
-  depends_on = concat(
-    [aws_eks_node_group.this],
-    contains(keys(var.addons), "aws-ebs-csi-driver") && each.key == "aws-ebs-csi-driver" ? [aws_iam_role_policy_attachment.ebs_csi_driver_policy[0]] : []
-  )
+  depends_on = [
+    aws_eks_node_group.this,
+    aws_iam_role_policy_attachment.ebs_csi_driver_policy
+  ]
 
   tags = merge(
     var.additional_tags,

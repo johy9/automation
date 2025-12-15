@@ -20,18 +20,18 @@ variable "environment" {
 
 variable "availability_zone" {
   description = "The list of availability zones"
-  type = list(string)
-  default = [ "us-east-1a", "us-east-1b", "us-east-1c" ]
+  type        = list(string)
+  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 variable "public_subnet_cidr" {
   description = "The list of public subnet CIDRs"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "private_subnet_cidr" {
   description = "The list of private subnet CIDRs"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "public_subnet_tags" {

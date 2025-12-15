@@ -2,16 +2,16 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.0.0"
+      version = ">= 5.30"
     }
   }
 
   required_version = ">= 1.11.0"
 
   backend "s3" {
-    bucket       = "oyegokeodev-terraform-states"
-    key          = "internal-psi-monitoring/staging/vpc/terraform.tfstate"
-    region       = "us-east-2"
+    bucket       = "oyegokeo-terraform-states"
+    key          = "internal-psi-monitoring/production/eks-test/terraform.tfstate"
+    region       = "us-east-1"
     use_lockfile = true
     encrypt      = true
   }

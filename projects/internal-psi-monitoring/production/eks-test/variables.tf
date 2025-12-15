@@ -1,8 +1,20 @@
 variable "project_name" {
-  description = "The name of the project"
+  description = "Project name"
   type        = string
 }
 
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}
+
+variable "cluster_version" {
+  description = "Kubernetes version"
+  type        = string
+  default     = "1.32"
+}
+
+# VPC Variables
 variable "vpc_cidr" {
   description = "The CIDR block for the VPC"
   type        = string
@@ -21,9 +33,4 @@ variable "public_subnet_cidr" {
 variable "private_subnet_cidr" {
   description = "List of private subnet CIDRs"
   type        = list(string)
-}
-
-variable "environment" {
-  description = "Environment name (e.g., staging, production)"
-  type        = string
 }

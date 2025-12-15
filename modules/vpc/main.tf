@@ -27,15 +27,15 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_internet_gateway" "igw" {
-    count = var.create_igw ? 1 : 0
-    vpc_id = aws_vpc.this.id
+  count  = var.create_igw ? 1 : 0
+  vpc_id = aws_vpc.this.id
 
-    tags = merge(
-      var.additional_tags,
-      {
-        Name = "${var.project_name}-${var.environment}-igw"
-      }
-    )
+  tags = merge(
+    var.additional_tags,
+    {
+      Name = "${var.project_name}-${var.environment}-igw"
+    }
+  )
 }
 
 resource "aws_route_table" "public_rt" {
@@ -57,18 +57,18 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_subnet" "public" {
-  count = length(var.public_subnet_cidr)
-  vpc_id            = aws_vpc.this.id
-    cidr_block        = var.public_subnet_cidr[count.index]
-    availability_zone = var.availability_zone[count.index]
-    map_public_ip_on_launch = true
-    tags = merge(
-      var.additional_tags,
-      var.public_subnet_tags,
-      {
-        Name = "${var.project_name}-${var.environment}-public-subnet-${count.index + 1}"
-      }
-    )
+  count                   = length(var.public_subnet_cidr)
+  vpc_id                  = aws_vpc.this.id
+  cidr_block              = var.public_subnet_cidr[count.index]
+  availability_zone       = var.availability_zone[count.index]
+  map_public_ip_on_launch = true
+  tags = merge(
+    var.additional_tags,
+    var.public_subnet_tags,
+    {
+      Name = "${var.project_name}-${var.environment}-public-subnet-${count.index + 1}"
+    }
+  )
 }
 
 resource "aws_route_table_association" "public_assoc" {
@@ -78,21 +78,21 @@ resource "aws_route_table_association" "public_assoc" {
 }
 
 resource "aws_eip" "nat" {
-  count = var.enable_nat_gateway && length(var.private_subnet_cidr) > 0 ? (var.single_nat_gateway ? 1 : length(var.private_subnet_cidr)) : 0
-  domain = "vpc"
+  count      = var.enable_nat_gateway && length(var.private_subnet_cidr) > 0 ? (var.single_nat_gateway ? 1 : length(var.private_subnet_cidr)) : 0
+  domain     = "vpc"
   depends_on = [aws_internet_gateway.igw]
 
-    tags = merge(
-      var.additional_tags,
-      {
-        Name = "${var.project_name}-${var.environment}-nat-eip-${count.index + 1}"
-      }
-    )
-  
+  tags = merge(
+    var.additional_tags,
+    {
+      Name = "${var.project_name}-${var.environment}-nat-eip-${count.index + 1}"
+    }
+  )
+
 }
 
 resource "aws_nat_gateway" "main" {
-  count = var.enable_nat_gateway && length(var.private_subnet_cidr) > 0 ? (var.single_nat_gateway ? 1 : length(var.private_subnet_cidr)) : 0
+  count         = var.enable_nat_gateway && length(var.private_subnet_cidr) > 0 ? (var.single_nat_gateway ? 1 : length(var.private_subnet_cidr)) : 0
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
 
@@ -105,22 +105,22 @@ resource "aws_nat_gateway" "main" {
 }
 
 resource "aws_subnet" "private" {
-  count = length(var.private_subnet_cidr)
+  count             = length(var.private_subnet_cidr)
   vpc_id            = aws_vpc.this.id
   cidr_block        = var.private_subnet_cidr[count.index]
   availability_zone = var.availability_zone[count.index]
-  
+
   tags = merge(
-      var.additional_tags,
-      var.private_subnet_tags,
-      {
-        Name = "${var.project_name}-${var.environment}-private-subnet-${count.index + 1}"
-      }
-    )
+    var.additional_tags,
+    var.private_subnet_tags,
+    {
+      Name = "${var.project_name}-${var.environment}-private-subnet-${count.index + 1}"
+    }
+  )
 }
 
 resource "aws_route_table" "private_rt" {
-  count = length(var.private_subnet_cidr)
+  count  = length(var.private_subnet_cidr)
   vpc_id = aws_vpc.this.id
 
   tags = merge(

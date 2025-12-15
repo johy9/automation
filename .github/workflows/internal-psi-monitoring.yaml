@@ -29,6 +29,7 @@ on:
         options:
           - vpc
           - eks
+          - addons
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

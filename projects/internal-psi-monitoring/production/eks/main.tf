@@ -1,9 +1,9 @@
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
-    bucket = "oyegokeodev-terraform-states"
+    bucket = "oyegokeo-terraform-states"
     key    = "internal-psi-monitoring/production/vpc/terraform.tfstate"
-    region = "us-east-2"
+    region = "us-east-1"
   }
 }
 
@@ -12,48 +12,60 @@ module "eks" {
 
   project_name = var.project_name
   environment  = var.environment
-  cluster_name = "${var.project_name}-${var.environment}-cluster"
-  
+  cluster_name = "${var.project_name}-${var.environment}-eks"
+
   cluster_version = var.cluster_version
 
-  subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnets
+  subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnet_ids
 
-  # Production: Enable private access, disable public access for security
+  # Production: Enable private access, enable public access for external visibility
   endpoint_private_access = true
   endpoint_public_access  = true
+  public_access_cidrs     = ["0.0.0.0/0"]
 
   # Production Node Groups
   node_groups = {
     general = {
-      desired_size   = 3
-      max_size       = 5
+      desired_size   = 2
+      max_size       = 4
       min_size       = 2
-      instance_types = ["m5.large"] # Larger instances for prod
+      instance_types = ["m5.large"]
       capacity_type  = "ON_DEMAND"
       disk_size      = 50
     }
     compute = {
-      desired_size   = 2
+      desired_size   = 0
       max_size       = 4
-      min_size       = 1
+      min_size       = 0
       instance_types = ["c5.xlarge"]
       capacity_type  = "ON_DEMAND"
     }
   }
 
   addons = {
-    vpc-cni            = {}
-    coredns            = {}
-    kube-proxy         = {}
-    aws-ebs-csi-driver = {}
+    vpc-cni                = {}
+    coredns                = {}
+    kube-proxy             = {}
+    aws-ebs-csi-driver     = {}
+    aws-efs-csi-driver     = {}
+    eks-pod-identity-agent = {}
   }
 
   enable_cluster_creator_admin_permissions = false
 
+  # Enable IAM Roles for Add-ons
+  enable_karpenter     = true
+  enable_lb_controller = true
+  enable_external_dns  = true
+  enable_efs_driver    = true
+
   additional_tags = {
-    Environment = var.environment
-    Owner       = "DevOps"
-    Project     = var.project_name
-    ManagedBy   = "Terraform"
+    psi_environment      = "production"
+    psi_source_repo      = "psi-terraform"
+    psi_cost_center      = "internal"
+    psi_application_name = "internal_psi_monitoring"
+    psi_lifecycle        = "active"
+    psi_managed_by       = "terraform"
+    psi_application_type = "shared_service"
   }
 }

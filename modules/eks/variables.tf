@@ -68,14 +68,14 @@ variable "node_groups" {
 
 variable "addons" {
   description = "Map of EKS add-ons to enable. Keys are add-on names (e.g., vpc-cni, coredns), values are versions or empty for default."
-  type        = map(object({
+  type = map(object({
     version           = optional(string)
     resolve_conflicts = optional(string, "OVERWRITE")
   }))
   default = {
-    vpc-cni    = {}
-    coredns    = {}
-    kube-proxy = {}
+    vpc-cni            = {}
+    coredns            = {}
+    kube-proxy         = {}
     aws-ebs-csi-driver = {}
   }
 }
@@ -108,4 +108,26 @@ variable "additional_tags" {
   description = "Additional tags to be applied to all resources"
   type        = map(string)
   default     = {}
+}
+variable "enable_karpenter" {
+  description = "Whether to create IAM roles and policies for Karpenter"
+  type        = bool
+  default     = false
+}
+
+variable "enable_lb_controller" {
+  description = "Whether to create IAM roles and policies for AWS Load Balancer Controller"
+  type        = bool
+  default     = false
+}
+variable "enable_external_dns" {
+  description = "Enable ExternalDNS IAM role and Pod Identity association"
+  type        = bool
+  default     = false
+}
+
+variable "enable_efs_driver" {
+  description = "Enable EFS CSI Driver IAM role and Pod Identity association"
+  type        = bool
+  default     = false
 }

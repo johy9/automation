@@ -15,9 +15,13 @@ module "vpc" {
   create_igw         = true
 
   additional_tags = {
-    Environment = "production"
-    Owner       = "DevOps"
-    Project     = "internal-psi-monitoring"
+    psi_environment      = "production"
+    psi_source_repo      = "psi-terraform"
+    psi_cost_center      = "internal"
+    psi_application_name = "internal_psi_monitoring"
+    psi_lifecycle        = "active"
+    psi_managed_by       = "terraform"
+    psi_application_type = "shared_service"
   }
 
   public_subnet_tags = {
@@ -26,5 +30,6 @@ module "vpc" {
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = "1"
+    "karpenter.sh/discovery"          = "${var.project_name}-${var.environment}-eks"
   }
 }

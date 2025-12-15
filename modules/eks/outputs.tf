@@ -37,3 +37,33 @@ output "node_group_role_arn" {
   description = "IAM Role ARN for the Node Groups"
   value       = try(aws_iam_role.node_group.arn, null)
 }
+
+output "karpenter_controller_role_arn" {
+  description = "ARN of the IAM role for Karpenter Controller"
+  value       = try(aws_iam_role.karpenter_controller[0].arn, null)
+}
+
+output "karpenter_node_role_name" {
+  description = "Name of the IAM role for Karpenter Nodes"
+  value       = try(aws_iam_role.karpenter_node[0].name, null)
+}
+
+output "karpenter_node_instance_profile_name" {
+  description = "Name of the IAM Instance Profile for Karpenter Nodes"
+  value       = try(aws_iam_instance_profile.karpenter_node[0].name, null)
+}
+
+output "lb_controller_role_arn" {
+  description = "ARN of the IAM role for AWS Load Balancer Controller"
+  value       = try(aws_iam_role.lb_controller[0].arn, null)
+}
+
+output "efs_file_system_id" {
+  description = "ID of the EFS File System"
+  value       = var.enable_efs_driver ? aws_efs_file_system.this[0].id : ""
+}
+
+output "vpc_id" {
+  description = "The VPC ID where the cluster is deployed"
+  value       = aws_eks_cluster.this.vpc_config[0].vpc_id
+}

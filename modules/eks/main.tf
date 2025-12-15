@@ -12,12 +12,12 @@ data "aws_iam_policy_document" "cluster_assume_role" {
 }
 
 resource "aws_iam_role" "cluster" {
-  name               = "${var.project_name}-${var.environment}-cluster-role"
+  name               = "${var.project_name}-${var.environment}-eks-role"
   assume_role_policy = data.aws_iam_policy_document.cluster_assume_role.json
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-${var.environment}-cluster-role"
+      Name = "${var.project_name}-${var.environment}-eks-role"
     }
   )
 }
@@ -64,7 +64,7 @@ resource "aws_eks_cluster" "this" {
   tags = merge(
     var.additional_tags,
     {
-      Name = "${var.project_name}-${var.environment}-cluster"
+      Name = "${var.project_name}-${var.environment}-eks"
     }
   )
 }

@@ -1,3 +1,3 @@
 project_name    = "internal-psi-monitoring"
 environment     = "production"
-cluster_version = "1.30"
+cluster_version = "1.32"
