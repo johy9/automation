@@ -67,3 +67,8 @@ output "vpc_id" {
   description = "The VPC ID where the cluster is deployed"
   value       = aws_eks_cluster.this.vpc_config[0].vpc_id
 }
+
+output "cluster_security_group_id" {
+  description = "Security Group ID attached to the EKS Cluster"
+  value       = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+}

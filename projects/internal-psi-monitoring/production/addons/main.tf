@@ -41,5 +41,5 @@ provider "kubectl" {
     args        = ["eks", "get-token", "--cluster-name", data.terraform_remote_state.eks.outputs.cluster_name, "--region", "us-east-2"]
     command     = "aws"
   }
-  load_config_file       = false
+  load_config_file = false
 }

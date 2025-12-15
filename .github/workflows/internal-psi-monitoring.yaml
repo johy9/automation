@@ -30,17 +30,18 @@ on:
           - vpc
           - eks
           - addons
+          - argocd
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 permissions:
-  contents: read # Only read permission is needed when using static secrets
-  id-token: write # Needed for OIDC to assume AWS Role
+  contents: read
+  id-token: write
 
 jobs:
-  # 1. Orchestration Job: Determines which environment(s) to run
+  # 1. Orchestration: Determine environments
   determine_envs:
     runs-on: ubuntu-latest
     outputs:
@@ -48,37 +49,27 @@ jobs:
     steps:
       - id: set_envs
         run: |
-          # Default to running both environments on push/PR
           ENVS='["staging", "production"]'
-          
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             TARGET_ENV="${{ github.event.inputs.environment }}"
-            # If manual dispatch, run only the specified environment
             ENVS="[\"$TARGET_ENV\"]"
           fi
-          
           echo "environments=$ENVS" >> $GITHUB_OUTPUT
 
-  # 2. Deployment Job: Runs the shared logic for each environment in the matrix
-  deploy:
-    name: Deploy to ${{ matrix.env }}
+  # 2. Plan Job: Runs Terraform Plan and uploads the artifact
+  plan:
+    name: Plan ${{ matrix.env }}
     needs: determine_envs
     runs-on: ubuntu-latest
-    
-    # Define the Matrix using the output from the previous job
     strategy:
       fail-fast: true
       matrix:
-        env: ${{ fromJson(needs.determine_envs.outputs.environments) }} 
-
-    # Use the GitHub Environment feature for protection rules (e.g., Prod manual approval)
-    environment: ${{ matrix.env }} 
+        env: ${{ fromJson(needs.determine_envs.outputs.environments) }}
     
     defaults:
       run:
-        # Dynamic working directory
         working-directory: projects/internal-psi-monitoring/${{ matrix.env }}/${{ github.event.inputs.component }}
-        
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -86,19 +77,10 @@ jobs:
       - name: Set Environment Variables
         id: env_vars
         run: |
-          # Creates the variable name needed to fetch the tfvars content (e.g., STAGING_TFVARS)
           ENV_UPPER=$(echo ${{ matrix.env }} | tr '[:lower:]' '[:upper:]')
           echo "tfvars_var_name=${ENV_UPPER}_TFVARS" >> $GITHUB_OUTPUT
-          
-      # Option 1: Use IAM Role (OIDC) - Recommended for Company/Production
-      # - name: Configure AWS Credentials (IAM Role)
-      #   uses: aws-actions/configure-aws-credentials@v4
-      #   with:
-      #     aws-region: us-east-1
-      #     role-to-assume: ${{ secrets.AWS_ROLE }}
 
-      # Option 2: Use IAM User (Access Keys) - Uncomment for Personal/Testing
-      - name: Configure AWS Credentials (IAM User)
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: us-east-1
@@ -115,7 +97,6 @@ jobs:
           terraform_version: 1.11.0
 
       - name: Create terraform.tfvars
-        # Dynamically fetches the correct repository variable (STAGING_TFVARS or PRODUCTION_TFVARS)
         env:
           TFVARS: ${{ vars[steps.env_vars.outputs.tfvars_var_name] }}
         run: |
@@ -123,45 +104,89 @@ jobs:
             echo "$TFVARS" > terraform.tfvars
           fi
 
-      # ----------------------------------------------------
-      # CORE TERRAFORM STEPS (REMAINS THE SAME FOR ALL ENVIRONMENTS)
-      # ----------------------------------------------------
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Validate
         run: terraform validate
       
-      # Plan (Normal) - Runs on PR, Push, or Manual Plan/Apply
       - name: Terraform Plan
         id: plan
         if: github.event_name != 'workflow_dispatch' || github.event.inputs.action != 'destroy'
         run: terraform plan -out=tfplan -input=false
 
-      # Plan (Destroy) - Runs only on Manual Destroy
       - name: Terraform Plan (Destroy)
         id: plan-destroy
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
         run: terraform plan -destroy -out=tfplan -input=false
 
-      - name: Generate Timestamp & Convert Plan to JSON
-        id: plan_artifact
-        if: steps.plan.outcome == 'success' || steps.plan-destroy.outcome == 'success'
-        run: |
-          TIMESTAMP=$(date +'%Y-%m-%d-%H-%M-%S')
-          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
-          PLAN_FILENAME=internal-psi-monitoring-${{ matrix.env }}_$TIMESTAMP.json
-          terraform show -json tfplan > $PLAN_FILENAME
-          echo "plan_filename=$PLAN_FILENAME" >> $GITHUB_OUTPUT
-
-      - name: Upload Plan JSON
-        if: steps.plan.outcome == 'success' || steps.plan-destroy.outcome == 'success'
+      - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: plan-${{ matrix.env }}-${{ steps.plan_artifact.outputs.timestamp }}
-          path: projects/internal-psi-monitoring/${{ matrix.env }}/${{ github.event.inputs.component }}/${{ steps.plan_artifact.outputs.plan_filename }}
+          name: tfplan-${{ matrix.env }}
+          path: projects/internal-psi-monitoring/${{ matrix.env }}/${{ github.event.inputs.component }}/tfplan
 
-      # Apply - Runs only on Manual Apply or Destroy (on main branch)
+  # 3. Apply Job: Runs Terraform Apply using the saved plan
+  apply:
+    name: Apply ${{ matrix.env }}
+    needs: [determine_envs, plan]
+    # Only run if the action is 'apply' or 'destroy'
+    if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        env: ${{ fromJson(needs.determine_envs.outputs.environments) }}
+    
+    # This enforces the Manual Approval rule configured in GitHub Environments
+    environment: ${{ matrix.env }}
+    
+    defaults:
+      run:
+        working-directory: projects/internal-psi-monitoring/${{ matrix.env }}/${{ github.event.inputs.component }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set Environment Variables
+        id: env_vars
+        run: |
+          ENV_UPPER=$(echo ${{ matrix.env }} | tr '[:lower:]' '[:upper:]')
+          echo "tfvars_var_name=${ENV_UPPER}_TFVARS" >> $GITHUB_OUTPUT
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+      - name: Configure Git
+        run: |
+          git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.11.0
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan-${{ matrix.env }}
+          path: projects/internal-psi-monitoring/${{ matrix.env }}/${{ github.event.inputs.component }}
+
+      - name: Create terraform.tfvars
+        env:
+          TFVARS: ${{ vars[steps.env_vars.outputs.tfvars_var_name] }}
+        run: |
+          if [ ! -f terraform.tfvars ]; then
+            echo "$TFVARS" > terraform.tfvars
+          fi
+
+      - name: Terraform Init
+        run: terraform init
+
       - name: Terraform Apply
-        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.action == 'apply' || github.event.inputs.action == 'destroy') && github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve -input=false tfplan

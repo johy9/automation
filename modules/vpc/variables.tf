@@ -69,7 +69,7 @@ variable "additional_tags" {
   type        = map(string)
   default     = {}
   validation {
-    condition     = can(var.additional_tags["Environment"]) && can(var.additional_tags["Owner"]) && can(var.additional_tags["Project"])
-    error_message = "Tags must contain at least 'Environment', 'Owner', and 'Project' keys."
+    condition     = can(var.additional_tags["psi_environment"]) && can(var.additional_tags["psi_lifecycle"]) && can(var.additional_tags["psi_cost_center"])
+    error_message = "Tags must contain at least 'psi_environment', 'psi_lifecycle', and 'psi_cost_center' keys."
   }
 }

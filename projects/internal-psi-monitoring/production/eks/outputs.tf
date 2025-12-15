@@ -37,3 +37,8 @@ output "vpc_id" {
   description = "The VPC ID where the cluster is deployed"
   value       = module.eks.vpc_id
 }
+
+output "cluster_security_group_id" {
+  description = "Security Group ID attached to the EKS Cluster"
+  value       = module.eks.cluster_security_group_id
+}

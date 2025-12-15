@@ -36,6 +36,8 @@ resource "helm_release" "karpenter" {
   }
 
   # We do NOT set annotations for the role ARN because we are using Pod Identity.
+
+  depends_on = [helm_release.aws_load_balancer_controller]
 }
 
 # ------------------------------------------------------------------------------
@@ -57,7 +59,7 @@ resource "kubectl_manifest" "karpenter_node_class" {
         - tags:
             karpenter.sh/discovery: "${data.terraform_remote_state.eks.outputs.cluster_name}"
         - tags:
-            karpenter.sh/discovery: "${var.project_name}-${var.environment}-cluster"
+            karpenter.sh/discovery: "${var.project_name}-${var.environment}-eks"
       securityGroupSelectorTerms:
         - tags:
             "kubernetes.io/cluster/${data.terraform_remote_state.eks.outputs.cluster_name}": "owned"

@@ -128,8 +128,12 @@ resource "aws_iam_policy" "karpenter_controller" {
       },
       {
         Effect   = "Allow"
+        Action   = "iam:PassRole"
+        Resource = aws_iam_role.karpenter_node[0].arn
+      },
+      {
+        Effect   = "Allow"
         Action   = [
-          "iam:PassRole",
           "iam:CreateInstanceProfile",
           "iam:TagInstanceProfile",
           "iam:DeleteInstanceProfile",
