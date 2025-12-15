@@ -86,6 +86,16 @@ jobs:
           aws-region: us-east-1
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v4 # Using the latest v4
+      #   with:
+      #     aws-region: us-east-1
+      #     role-to-assume: ${{ secrets.AWS_ROLE }}
+      
+      # - name: Configure Git
+      #   run: |
+      #     git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
       
       - name: Get Caller Identity
         run: |
