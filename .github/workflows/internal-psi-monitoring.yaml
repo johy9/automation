@@ -20,7 +20,7 @@ on:
         default: 'staging'
         type: choice
         options:
-          - staging
+          # - staging
           - production
       component:
         description: 'Component'
@@ -30,7 +30,6 @@ on:
           - vpc
           - eks
           - addons
-          - argocd
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -80,22 +79,22 @@ jobs:
           ENV_UPPER=$(echo ${{ matrix.env }} | tr '[:lower:]' '[:upper:]')
           echo "tfvars_var_name=${ENV_UPPER}_TFVARS" >> $GITHUB_OUTPUT
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: us-east-1
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
       # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v4 # Using the latest v4
+      #   uses: aws-actions/configure-aws-credentials@v4
       #   with:
       #     aws-region: us-east-1
-      #     role-to-assume: ${{ secrets.AWS_ROLE }}
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4 # Using the latest v4
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.AWS_ROLE }}
       
-      # - name: Configure Git
-      #   run: |
-      #     git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
+      - name: Configure Git
+        run: |
+          git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
       
       - name: Get Caller Identity
         run: |

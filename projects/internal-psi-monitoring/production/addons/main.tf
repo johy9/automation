@@ -1,7 +1,7 @@
 data "terraform_remote_state" "eks" {
   backend = "s3"
   config = {
-    bucket = "oyegokeo-terraform-states"
+    bucket = "ringcentral-terraform-states"
     key    = "internal-psi-monitoring/production/eks/terraform.tfstate"
     region = "us-east-1"
   }
