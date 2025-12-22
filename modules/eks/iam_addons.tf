@@ -132,8 +132,8 @@ resource "aws_iam_policy" "karpenter_controller" {
         Resource = aws_iam_role.karpenter_node[0].arn
       },
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "iam:CreateInstanceProfile",
           "iam:TagInstanceProfile",
           "iam:DeleteInstanceProfile",

@@ -152,11 +152,10 @@ variable "capabilities" {
   type = map(object({
     version = optional(string)
     configuration = optional(object({
-      admin_enabled = optional(bool, true)
-      aws_idc = optional(object({
+      aws_idc = object({
         idc_instance_arn = string
-        idc_region       = string
-      }))
+        idc_region       = optional(string)
+      })
     }))
     role_arn                  = optional(string)
     delete_propagation_policy = optional(string, "RETAIN")

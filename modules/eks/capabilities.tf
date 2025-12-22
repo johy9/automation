@@ -32,9 +32,9 @@ resource "aws_eks_capability" "this" {
 
   cluster_name    = aws_eks_cluster.this.name
   capability_name = each.key
-  
+
   # Infer type from key or make it explicit. Assuming key "argocd" maps to type "ARGOCD"
-  type = upper(each.key) 
+  type = upper(each.key)
 
   role_arn = each.value.role_arn != null ? each.value.role_arn : aws_iam_role.capability[each.key].arn
 
@@ -46,14 +46,9 @@ resource "aws_eks_capability" "this" {
       dynamic "argo_cd" {
         for_each = upper(each.key) == "ARGOCD" ? [1] : []
         content {
-          # admin_enabled = configuration.value.admin_enabled # Some versions might support this
-          
-          dynamic "aws_idc" {
-            for_each = configuration.value.aws_idc != null ? [configuration.value.aws_idc] : []
-            content {
-              idc_instance_arn = aws_idc.value.idc_instance_arn
-              idc_region       = aws_idc.value.idc_region
-            }
+          aws_idc {
+            idc_instance_arn = configuration.value.aws_idc.idc_instance_arn
+            idc_region       = try(configuration.value.aws_idc.idc_region, null)
           }
         }
       }

@@ -51,16 +51,19 @@ module "eks" {
     eks-pod-identity-agent = {}
   }
 
-  capabilities = {
+  # NOTE: With the AWS-managed ArgoCD Capability, the AWS provider enforces
+  # configuring AWS IAM Identity Center (aws_idc). If you do not want to use
+  # IAM Identity Center, do not enable this managed capability.
+  capabilities = var.idc_instance_arn != null ? {
     argocd = {
       configuration = {
-        aws_idc = var.idc_instance_arn != null ? {
+        aws_idc = {
           idc_instance_arn = var.idc_instance_arn
           idc_region       = var.idc_region
-        } : null
+        }
       }
     }
-  }
+  } : {}
 
   enable_cluster_creator_admin_permissions = false
 

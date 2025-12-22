@@ -37,3 +37,6 @@ override.tf.json
 terraform.rc
 *.vpc.yaml
 *.game-2048.yaml
+
+# Provider schema inspection artifact (generated locally)
+projects/internal-psi-monitoring/production/eks/schema.json
