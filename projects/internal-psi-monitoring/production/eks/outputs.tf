@@ -28,6 +28,11 @@ output "karpenter_node_role_name" {
   value       = module.eks.karpenter_node_role_name
 }
 
+output "argocd_url" {
+  description = "ArgoCD Application URL"
+  value       = length(module.eks.capabilities) > 0 ? lookup(module.eks.capabilities["argocd"], "application_url", null) : null
+}
+
 output "efs_file_system_id" {
   description = "ID of the EFS File System"
   value       = module.eks.efs_file_system_id

@@ -51,6 +51,17 @@ module "eks" {
     eks-pod-identity-agent = {}
   }
 
+  capabilities = {
+    argocd = {
+      configuration = {
+        aws_idc = var.idc_instance_arn != null ? {
+          idc_instance_arn = var.idc_instance_arn
+          idc_region       = var.idc_region
+        } : null
+      }
+    }
+  }
+
   enable_cluster_creator_admin_permissions = false
 
   # Enable IAM Roles for Add-ons

@@ -20,3 +20,14 @@ variable "github_actions_role_arn" {
   default     = null
 }
 
+variable "idc_instance_arn" {
+  description = "ARN of the AWS IAM Identity Center instance"
+  type        = string
+  default     = null
+}
+
+variable "idc_region" {
+  description = "Region where the AWS IAM Identity Center instance is deployed"
+  type        = string
+  default     = "us-east-1"
+}

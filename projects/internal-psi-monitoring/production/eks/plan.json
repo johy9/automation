@@ -1,0 +1,1663 @@
+[0m[1mdata.terraform_remote_state.vpc: Reading...[0m[0m
+[0m[1mmodule.eks.data.aws_iam_policy_document.cluster_assume_role: Reading...[0m[0m
+[0m[1mmodule.eks.data.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.eks.data.aws_iam_policy_document.cluster_assume_role: Read complete after 0s [id=3552664922][0m
+[0m[1mmodule.eks.data.aws_caller_identity.current: Read complete after 0s [id=172316546414][0m
+[0m[1mdata.terraform_remote_state.vpc: Read complete after 3s[0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+ [36m<=[0m read (data resources)[0m
+
+Terraform will perform the following actions:
+
+[1m  # module.eks.data.aws_iam_policy_document.ebs_csi_driver_assume_role[0][0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_iam_policy_document" "ebs_csi_driver_assume_role" {
+      [32m+[0m[0m id            = (known after apply)
+      [32m+[0m[0m json          = (known after apply)
+      [32m+[0m[0m minified_json = (known after apply)
+
+      [32m+[0m[0m statement {
+          [32m+[0m[0m actions = [
+              [32m+[0m[0m "sts:AssumeRoleWithWebIdentity",
+            ]
+          [32m+[0m[0m effect  = "Allow"
+
+          [32m+[0m[0m condition {
+              [32m+[0m[0m test     = "StringEquals"
+              [32m+[0m[0m values   = [
+                  [32m+[0m[0m "system:serviceaccount:kube-system:ebs-csi-controller-sa",
+                ]
+              [32m+[0m[0m variable = (known after apply)
+            }
+
+          [32m+[0m[0m principals {
+              [32m+[0m[0m identifiers = [
+                  [32m+[0m[0m (known after apply),
+                ]
+              [32m+[0m[0m type        = "Federated"
+            }
+        }
+    }
+
+[1m  # module.eks.data.aws_vpc.selected[0][0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "aws_vpc" "selected" {
+      [32m+[0m[0m arn                                  = (known after apply)
+      [32m+[0m[0m cidr_block                           = (known after apply)
+      [32m+[0m[0m cidr_block_associations              = (known after apply)
+      [32m+[0m[0m default                              = (known after apply)
+      [32m+[0m[0m dhcp_options_id                      = (known after apply)
+      [32m+[0m[0m enable_dns_hostnames                 = (known after apply)
+      [32m+[0m[0m enable_dns_support                   = (known after apply)
+      [32m+[0m[0m enable_network_address_usage_metrics = (known after apply)
+      [32m+[0m[0m id                                   = (known after apply)
+      [32m+[0m[0m instance_tenancy                     = (known after apply)
+      [32m+[0m[0m ipv6_association_id                  = (known after apply)
+      [32m+[0m[0m ipv6_cidr_block                      = (known after apply)
+      [32m+[0m[0m main_route_table_id                  = (known after apply)
+      [32m+[0m[0m owner_id                             = (known after apply)
+      [32m+[0m[0m region                               = (known after apply)
+      [32m+[0m[0m state                                = (known after apply)
+      [32m+[0m[0m tags                                 = (known after apply)
+    }
+
+[1m  # module.eks.data.tls_certificate.this[0][0m will be read during apply
+  # (config refers to values not yet known)
+[0m [36m<=[0m[0m data "tls_certificate" "this" {
+      [32m+[0m[0m certificates = (known after apply)
+      [32m+[0m[0m id           = (known after apply)
+      [32m+[0m[0m url          = (known after apply)
+    }
+
+[1m  # module.eks.aws_efs_file_system.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_efs_file_system" "this" {
+      [32m+[0m[0m arn                     = (known after apply)
+      [32m+[0m[0m availability_zone_id    = (known after apply)
+      [32m+[0m[0m availability_zone_name  = (known after apply)
+      [32m+[0m[0m creation_token          = "internal-psi-monitoring-production-efs"
+      [32m+[0m[0m dns_name                = (known after apply)
+      [32m+[0m[0m encrypted               = true
+      [32m+[0m[0m id                      = (known after apply)
+      [32m+[0m[0m kms_key_id              = (known after apply)
+      [32m+[0m[0m name                    = (known after apply)
+      [32m+[0m[0m number_of_mount_targets = (known after apply)
+      [32m+[0m[0m owner_id                = (known after apply)
+      [32m+[0m[0m performance_mode        = (known after apply)
+      [32m+[0m[0m region                  = "us-east-2"
+      [32m+[0m[0m size_in_bytes           = (known after apply)
+      [32m+[0m[0m tags                    = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-efs"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-efs"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m throughput_mode         = "bursting"
+
+      [32m+[0m[0m protection (known after apply)
+    }
+
+[1m  # module.eks.aws_efs_mount_target.this[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_efs_mount_target" "this" {
+      [32m+[0m[0m availability_zone_id   = (known after apply)
+      [32m+[0m[0m availability_zone_name = (known after apply)
+      [32m+[0m[0m dns_name               = (known after apply)
+      [32m+[0m[0m file_system_arn        = (known after apply)
+      [32m+[0m[0m file_system_id         = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_address             = (known after apply)
+      [32m+[0m[0m ip_address_type        = (known after apply)
+      [32m+[0m[0m ipv6_address           = (known after apply)
+      [32m+[0m[0m mount_target_dns_name  = (known after apply)
+      [32m+[0m[0m network_interface_id   = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "us-east-2"
+      [32m+[0m[0m security_groups        = (known after apply)
+      [32m+[0m[0m subnet_id              = "subnet-081dd9c715ea9317e"
+    }
+
+[1m  # module.eks.aws_efs_mount_target.this[1][0m will be created
+[0m  [32m+[0m[0m resource "aws_efs_mount_target" "this" {
+      [32m+[0m[0m availability_zone_id   = (known after apply)
+      [32m+[0m[0m availability_zone_name = (known after apply)
+      [32m+[0m[0m dns_name               = (known after apply)
+      [32m+[0m[0m file_system_arn        = (known after apply)
+      [32m+[0m[0m file_system_id         = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_address             = (known after apply)
+      [32m+[0m[0m ip_address_type        = (known after apply)
+      [32m+[0m[0m ipv6_address           = (known after apply)
+      [32m+[0m[0m mount_target_dns_name  = (known after apply)
+      [32m+[0m[0m network_interface_id   = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "us-east-2"
+      [32m+[0m[0m security_groups        = (known after apply)
+      [32m+[0m[0m subnet_id              = "subnet-02a7fc8d55f6bb0be"
+    }
+
+[1m  # module.eks.aws_efs_mount_target.this[2][0m will be created
+[0m  [32m+[0m[0m resource "aws_efs_mount_target" "this" {
+      [32m+[0m[0m availability_zone_id   = (known after apply)
+      [32m+[0m[0m availability_zone_name = (known after apply)
+      [32m+[0m[0m dns_name               = (known after apply)
+      [32m+[0m[0m file_system_arn        = (known after apply)
+      [32m+[0m[0m file_system_id         = (known after apply)
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ip_address             = (known after apply)
+      [32m+[0m[0m ip_address_type        = (known after apply)
+      [32m+[0m[0m ipv6_address           = (known after apply)
+      [32m+[0m[0m mount_target_dns_name  = (known after apply)
+      [32m+[0m[0m network_interface_id   = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "us-east-2"
+      [32m+[0m[0m security_groups        = (known after apply)
+      [32m+[0m[0m subnet_id              = "subnet-0afb268fbd970d75a"
+    }
+
+[1m  # module.eks.aws_eks_access_entry.karpenter_node[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_access_entry" "karpenter_node" {
+      [32m+[0m[0m access_entry_arn  = (known after apply)
+      [32m+[0m[0m cluster_name      = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m created_at        = (known after apply)
+      [32m+[0m[0m id                = (known after apply)
+      [32m+[0m[0m kubernetes_groups = (known after apply)
+      [32m+[0m[0m modified_at       = (known after apply)
+      [32m+[0m[0m principal_arn     = (known after apply)
+      [32m+[0m[0m region            = "us-east-2"
+      [32m+[0m[0m tags_all          = (known after apply)
+      [32m+[0m[0m type              = "EC2_LINUX"
+      [32m+[0m[0m user_name         = (known after apply)
+    }
+
+[1m  # module.eks.aws_eks_addon.this["aws-ebs-csi-driver"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "aws-ebs-csi-driver"
+      [32m+[0m[0m addon_version               = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m region                      = "us-east-2"
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m service_account_role_arn    = (known after apply)
+      [32m+[0m[0m tags                        = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-aws-ebs-csi-driver"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-aws-ebs-csi-driver"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+    }
+
+[1m  # module.eks.aws_eks_addon.this["aws-efs-csi-driver"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "aws-efs-csi-driver"
+      [32m+[0m[0m addon_version               = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m region                      = "us-east-2"
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags                        = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-aws-efs-csi-driver"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-aws-efs-csi-driver"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+    }
+
+[1m  # module.eks.aws_eks_addon.this["coredns"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "coredns"
+      [32m+[0m[0m addon_version               = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m region                      = "us-east-2"
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags                        = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-coredns"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-coredns"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+    }
+
+[1m  # module.eks.aws_eks_addon.this["eks-pod-identity-agent"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "eks-pod-identity-agent"
+      [32m+[0m[0m addon_version               = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m region                      = "us-east-2"
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags                        = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-eks-pod-identity-agent"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-eks-pod-identity-agent"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+    }
+
+[1m  # module.eks.aws_eks_addon.this["kube-proxy"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "kube-proxy"
+      [32m+[0m[0m addon_version               = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m region                      = "us-east-2"
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags                        = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-kube-proxy"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-kube-proxy"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+    }
+
+[1m  # module.eks.aws_eks_addon.this["vpc-cni"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_addon" "this" {
+      [32m+[0m[0m addon_name                  = "vpc-cni"
+      [32m+[0m[0m addon_version               = (known after apply)
+      [32m+[0m[0m arn                         = (known after apply)
+      [32m+[0m[0m cluster_name                = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m configuration_values        = (known after apply)
+      [32m+[0m[0m created_at                  = (known after apply)
+      [32m+[0m[0m id                          = (known after apply)
+      [32m+[0m[0m modified_at                 = (known after apply)
+      [32m+[0m[0m region                      = "us-east-2"
+      [32m+[0m[0m resolve_conflicts_on_create = "OVERWRITE"
+      [32m+[0m[0m resolve_conflicts_on_update = "OVERWRITE"
+      [32m+[0m[0m tags                        = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-vpc-cni"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                    = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-addon-vpc-cni"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+    }
+
+[1m  # module.eks.aws_eks_capability.this["argocd"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_capability" "this" {
+      [32m+[0m[0m arn                       = (known after apply)
+      [32m+[0m[0m capability_name           = "argocd"
+      [32m+[0m[0m cluster_name              = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m delete_propagation_policy = "RETAIN"
+      [32m+[0m[0m region                    = "us-east-2"
+      [32m+[0m[0m role_arn                  = (known after apply)
+      [32m+[0m[0m tags_all                  = {}
+      [32m+[0m[0m type                      = "ARGOCD"
+      [32m+[0m[0m version                   = (known after apply)
+
+      [32m+[0m[0m configuration {
+          [32m+[0m[0m argo_cd {
+              [32m+[0m[0m namespace  = (known after apply)
+              [32m+[0m[0m server_url = (known after apply)
+
+              [32m+[0m[0m aws_idc {
+                  [32m+[0m[0m idc_instance_arn            = "arn:aws:sso:::instance/ssoins-7223e3639e6dfdb8"
+                  [32m+[0m[0m idc_managed_application_arn = (known after apply)
+                  [32m+[0m[0m idc_region                  = "us-east-1"
+                }
+            }
+        }
+    }
+
+[1m  # module.eks.aws_eks_cluster.this[0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_cluster" "this" {
+      [32m+[0m[0m arn                           = (known after apply)
+      [32m+[0m[0m bootstrap_self_managed_addons = true
+      [32m+[0m[0m certificate_authority         = (known after apply)
+      [32m+[0m[0m cluster_id                    = (known after apply)
+      [32m+[0m[0m created_at                    = (known after apply)
+      [32m+[0m[0m deletion_protection           = (known after apply)
+      [32m+[0m[0m enabled_cluster_log_types     = [
+          [32m+[0m[0m "api",
+          [32m+[0m[0m "audit",
+          [32m+[0m[0m "authenticator",
+          [32m+[0m[0m "controllerManager",
+          [32m+[0m[0m "scheduler",
+        ]
+      [32m+[0m[0m endpoint                      = (known after apply)
+      [32m+[0m[0m id                            = (known after apply)
+      [32m+[0m[0m identity                      = (known after apply)
+      [32m+[0m[0m name                          = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m platform_version              = (known after apply)
+      [32m+[0m[0m region                        = "us-east-2"
+      [32m+[0m[0m role_arn                      = (known after apply)
+      [32m+[0m[0m status                        = (known after apply)
+      [32m+[0m[0m tags                          = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-eks"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all                      = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-eks"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m version                       = "1.32"
+
+      [32m+[0m[0m access_config {
+          [32m+[0m[0m authentication_mode                         = "API"
+          [32m+[0m[0m bootstrap_cluster_creator_admin_permissions = false
+        }
+
+      [32m+[0m[0m compute_config (known after apply)
+
+      [32m+[0m[0m control_plane_scaling_config (known after apply)
+
+      [32m+[0m[0m kubernetes_network_config (known after apply)
+
+      [32m+[0m[0m storage_config (known after apply)
+
+      [32m+[0m[0m upgrade_policy (known after apply)
+
+      [32m+[0m[0m vpc_config {
+          [32m+[0m[0m cluster_security_group_id = (known after apply)
+          [32m+[0m[0m endpoint_private_access   = true
+          [32m+[0m[0m endpoint_public_access    = true
+          [32m+[0m[0m public_access_cidrs       = [
+              [32m+[0m[0m "0.0.0.0/0",
+            ]
+          [32m+[0m[0m subnet_ids                = [
+              [32m+[0m[0m "subnet-02a7fc8d55f6bb0be",
+              [32m+[0m[0m "subnet-081dd9c715ea9317e",
+              [32m+[0m[0m "subnet-0afb268fbd970d75a",
+            ]
+          [32m+[0m[0m vpc_id                    = (known after apply)
+        }
+    }
+
+[1m  # module.eks.aws_eks_node_group.this["compute"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_node_group" "this" {
+      [32m+[0m[0m ami_type               = (known after apply)
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m capacity_type          = "ON_DEMAND"
+      [32m+[0m[0m cluster_name           = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m disk_size              = 20
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m instance_types         = [
+          [32m+[0m[0m "c5.xlarge",
+        ]
+      [32m+[0m[0m node_group_name        = "internal-psi-monitoring-production-compute"
+      [32m+[0m[0m node_group_name_prefix = (known after apply)
+      [32m+[0m[0m node_role_arn          = (known after apply)
+      [32m+[0m[0m region                 = "us-east-2"
+      [32m+[0m[0m release_version        = (known after apply)
+      [32m+[0m[0m resources              = (known after apply)
+      [32m+[0m[0m status                 = (known after apply)
+      [32m+[0m[0m subnet_ids             = [
+          [32m+[0m[0m "subnet-02a7fc8d55f6bb0be",
+          [32m+[0m[0m "subnet-081dd9c715ea9317e",
+          [32m+[0m[0m "subnet-0afb268fbd970d75a",
+        ]
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-compute"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-compute"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m version                = (known after apply)
+
+      [32m+[0m[0m node_repair_config (known after apply)
+
+      [32m+[0m[0m scaling_config {
+          [32m+[0m[0m desired_size = 0
+          [32m+[0m[0m max_size     = 4
+          [32m+[0m[0m min_size     = 0
+        }
+
+      [32m+[0m[0m update_config {
+          [32m+[0m[0m max_unavailable = 1
+        }
+    }
+
+[1m  # module.eks.aws_eks_node_group.this["general"][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_node_group" "this" {
+      [32m+[0m[0m ami_type               = (known after apply)
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m capacity_type          = "ON_DEMAND"
+      [32m+[0m[0m cluster_name           = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m disk_size              = 50
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m instance_types         = [
+          [32m+[0m[0m "m5.large",
+        ]
+      [32m+[0m[0m node_group_name        = "internal-psi-monitoring-production-general"
+      [32m+[0m[0m node_group_name_prefix = (known after apply)
+      [32m+[0m[0m node_role_arn          = (known after apply)
+      [32m+[0m[0m region                 = "us-east-2"
+      [32m+[0m[0m release_version        = (known after apply)
+      [32m+[0m[0m resources              = (known after apply)
+      [32m+[0m[0m status                 = (known after apply)
+      [32m+[0m[0m subnet_ids             = [
+          [32m+[0m[0m "subnet-02a7fc8d55f6bb0be",
+          [32m+[0m[0m "subnet-081dd9c715ea9317e",
+          [32m+[0m[0m "subnet-0afb268fbd970d75a",
+        ]
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-general"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-general"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m version                = (known after apply)
+
+      [32m+[0m[0m node_repair_config (known after apply)
+
+      [32m+[0m[0m scaling_config {
+          [32m+[0m[0m desired_size = 2
+          [32m+[0m[0m max_size     = 4
+          [32m+[0m[0m min_size     = 2
+        }
+
+      [32m+[0m[0m update_config {
+          [32m+[0m[0m max_unavailable = 1
+        }
+    }
+
+[1m  # module.eks.aws_eks_pod_identity_association.efs_csi_driver[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_pod_identity_association" "efs_csi_driver" {
+      [32m+[0m[0m association_arn      = (known after apply)
+      [32m+[0m[0m association_id       = (known after apply)
+      [32m+[0m[0m cluster_name         = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m disable_session_tags = false
+      [32m+[0m[0m external_id          = (known after apply)
+      [32m+[0m[0m id                   = (known after apply)
+      [32m+[0m[0m namespace            = "kube-system"
+      [32m+[0m[0m region               = "us-east-2"
+      [32m+[0m[0m role_arn             = (known after apply)
+      [32m+[0m[0m service_account      = "efs-csi-controller-sa"
+      [32m+[0m[0m tags_all             = {}
+    }
+
+[1m  # module.eks.aws_eks_pod_identity_association.external_dns[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_pod_identity_association" "external_dns" {
+      [32m+[0m[0m association_arn      = (known after apply)
+      [32m+[0m[0m association_id       = (known after apply)
+      [32m+[0m[0m cluster_name         = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m disable_session_tags = false
+      [32m+[0m[0m external_id          = (known after apply)
+      [32m+[0m[0m id                   = (known after apply)
+      [32m+[0m[0m namespace            = "kube-system"
+      [32m+[0m[0m region               = "us-east-2"
+      [32m+[0m[0m role_arn             = (known after apply)
+      [32m+[0m[0m service_account      = "external-dns"
+      [32m+[0m[0m tags_all             = {}
+    }
+
+[1m  # module.eks.aws_eks_pod_identity_association.karpenter[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_pod_identity_association" "karpenter" {
+      [32m+[0m[0m association_arn      = (known after apply)
+      [32m+[0m[0m association_id       = (known after apply)
+      [32m+[0m[0m cluster_name         = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m disable_session_tags = false
+      [32m+[0m[0m external_id          = (known after apply)
+      [32m+[0m[0m id                   = (known after apply)
+      [32m+[0m[0m namespace            = "kube-system"
+      [32m+[0m[0m region               = "us-east-2"
+      [32m+[0m[0m role_arn             = (known after apply)
+      [32m+[0m[0m service_account      = "karpenter"
+      [32m+[0m[0m tags_all             = {}
+    }
+
+[1m  # module.eks.aws_eks_pod_identity_association.lb_controller[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_eks_pod_identity_association" "lb_controller" {
+      [32m+[0m[0m association_arn      = (known after apply)
+      [32m+[0m[0m association_id       = (known after apply)
+      [32m+[0m[0m cluster_name         = "internal-psi-monitoring-production-eks"
+      [32m+[0m[0m disable_session_tags = false
+      [32m+[0m[0m external_id          = (known after apply)
+      [32m+[0m[0m id                   = (known after apply)
+      [32m+[0m[0m namespace            = "kube-system"
+      [32m+[0m[0m region               = "us-east-2"
+      [32m+[0m[0m role_arn             = (known after apply)
+      [32m+[0m[0m service_account      = "aws-load-balancer-controller"
+      [32m+[0m[0m tags_all             = {}
+    }
+
+[1m  # module.eks.aws_iam_instance_profile.karpenter_node[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_instance_profile" "karpenter_node" {
+      [32m+[0m[0m arn         = (known after apply)
+      [32m+[0m[0m create_date = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m name        = "internal-psi-monitoring-production-karpenter-node-profile"
+      [32m+[0m[0m name_prefix = (known after apply)
+      [32m+[0m[0m path        = "/"
+      [32m+[0m[0m role        = "internal-psi-monitoring-production-karpenter-node-role"
+      [32m+[0m[0m tags_all    = (known after apply)
+      [32m+[0m[0m unique_id   = (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_openid_connect_provider.oidc_provider[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_openid_connect_provider" "oidc_provider" {
+      [32m+[0m[0m arn             = (known after apply)
+      [32m+[0m[0m client_id_list  = [
+          [32m+[0m[0m "sts.amazonaws.com",
+        ]
+      [32m+[0m[0m id              = (known after apply)
+      [32m+[0m[0m tags            = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-eks-irsa"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all        = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-eks-irsa"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m thumbprint_list = (known after apply)
+      [32m+[0m[0m url             = (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_policy.external_dns[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "external_dns" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Policy for ExternalDNS to manage Route53 records"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "internal-psi-monitoring-production-external-dns-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "route53:ChangeResourceRecordSets",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = [
+                          [32m+[0m[0m "arn:aws:route53:::hostedzone/*",
+                        ]
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "route53:ListHostedZones",
+                          [32m+[0m[0m "route53:ListResourceRecordSets",
+                          [32m+[0m[0m "route53:ListTagsForResource",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = [
+                          [32m+[0m[0m "*",
+                        ]
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_policy.karpenter_controller[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "karpenter_controller" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Policy for Karpenter Controller"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "internal-psi-monitoring-production-karpenter-controller-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = (known after apply)
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_policy.lb_controller[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_policy" "lb_controller" {
+      [32m+[0m[0m arn              = (known after apply)
+      [32m+[0m[0m attachment_count = (known after apply)
+      [32m+[0m[0m description      = "Policy for AWS Load Balancer Controller"
+      [32m+[0m[0m id               = (known after apply)
+      [32m+[0m[0m name             = "internal-psi-monitoring-production-lb-controller-policy"
+      [32m+[0m[0m name_prefix      = (known after apply)
+      [32m+[0m[0m path             = "/"
+      [32m+[0m[0m policy           = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "iam:CreateServiceLinkedRole",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m StringEquals = {
+                              [32m+[0m[0m "iam:AWSServiceName" = "elasticloadbalancing.amazonaws.com"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "ec2:DescribeAccountAttributes",
+                          [32m+[0m[0m "ec2:DescribeAddresses",
+                          [32m+[0m[0m "ec2:DescribeAvailabilityZones",
+                          [32m+[0m[0m "ec2:DescribeInternetGateways",
+                          [32m+[0m[0m "ec2:DescribeVpcs",
+                          [32m+[0m[0m "ec2:DescribeVpcPeeringConnections",
+                          [32m+[0m[0m "ec2:DescribeSubnets",
+                          [32m+[0m[0m "ec2:DescribeSecurityGroups",
+                          [32m+[0m[0m "ec2:DescribeInstances",
+                          [32m+[0m[0m "ec2:DescribeNetworkInterfaces",
+                          [32m+[0m[0m "ec2:DescribeTags",
+                          [32m+[0m[0m "ec2:GetCoipPoolUsage",
+                          [32m+[0m[0m "ec2:DescribeCoipPools",
+                          [32m+[0m[0m "ec2:GetSecurityGroupsForVpc",
+                          [32m+[0m[0m "ec2:DescribeIpamPools",
+                          [32m+[0m[0m "ec2:DescribeRouteTables",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeLoadBalancers",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeLoadBalancerAttributes",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeListeners",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeListenerCertificates",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeSSLPolicies",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeRules",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeTargetGroups",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeTargetGroupAttributes",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeTargetHealth",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeTags",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeTrustStores",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeListenerAttributes",
+                          [32m+[0m[0m "elasticloadbalancing:DescribeCapacityReservation",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "cognito-idp:DescribeUserPoolClient",
+                          [32m+[0m[0m "acm:ListCertificates",
+                          [32m+[0m[0m "acm:DescribeCertificate",
+                          [32m+[0m[0m "iam:ListServerCertificates",
+                          [32m+[0m[0m "iam:GetServerCertificate",
+                          [32m+[0m[0m "waf-regional:GetWebACL",
+                          [32m+[0m[0m "waf-regional:GetWebACLForResource",
+                          [32m+[0m[0m "waf-regional:AssociateWebACL",
+                          [32m+[0m[0m "waf-regional:DisassociateWebACL",
+                          [32m+[0m[0m "wafv2:GetWebACL",
+                          [32m+[0m[0m "wafv2:GetWebACLForResource",
+                          [32m+[0m[0m "wafv2:AssociateWebACL",
+                          [32m+[0m[0m "wafv2:DisassociateWebACL",
+                          [32m+[0m[0m "shield:GetSubscriptionState",
+                          [32m+[0m[0m "shield:DescribeProtection",
+                          [32m+[0m[0m "shield:CreateProtection",
+                          [32m+[0m[0m "shield:DeleteProtection",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "ec2:AuthorizeSecurityGroupIngress",
+                          [32m+[0m[0m "ec2:RevokeSecurityGroupIngress",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "ec2:CreateSecurityGroup",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "ec2:CreateTags",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m Null         = {
+                              [32m+[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                          [32m+[0m[0m StringEquals = {
+                              [32m+[0m[0m "ec2:CreateAction" = "CreateSecurityGroup"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "arn:aws:ec2:*:*:security-group/*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "ec2:CreateTags",
+                          [32m+[0m[0m "ec2:DeleteTags",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m Null = {
+                              [32m+[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster"  = "true"
+                              [32m+[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "arn:aws:ec2:*:*:security-group/*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "ec2:AuthorizeSecurityGroupIngress",
+                          [32m+[0m[0m "ec2:RevokeSecurityGroupIngress",
+                          [32m+[0m[0m "ec2:DeleteSecurityGroup",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m Null = {
+                              [32m+[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "elasticloadbalancing:CreateLoadBalancer",
+                          [32m+[0m[0m "elasticloadbalancing:CreateTargetGroup",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m Null = {
+                              [32m+[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "elasticloadbalancing:CreateListener",
+                          [32m+[0m[0m "elasticloadbalancing:DeleteListener",
+                          [32m+[0m[0m "elasticloadbalancing:CreateRule",
+                          [32m+[0m[0m "elasticloadbalancing:DeleteRule",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "elasticloadbalancing:AddTags",
+                          [32m+[0m[0m "elasticloadbalancing:RemoveTags",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m Null = {
+                              [32m+[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster"  = "true"
+                              [32m+[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = [
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*",
+                        ]
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "elasticloadbalancing:AddTags",
+                          [32m+[0m[0m "elasticloadbalancing:RemoveTags",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = [
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:listener/net/*/*/*",
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*",
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:listener-rule/net/*/*/*",
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:listener-rule/app/*/*/*",
+                        ]
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "elasticloadbalancing:ModifyLoadBalancerAttributes",
+                          [32m+[0m[0m "elasticloadbalancing:SetIpAddressType",
+                          [32m+[0m[0m "elasticloadbalancing:SetSecurityGroups",
+                          [32m+[0m[0m "elasticloadbalancing:SetSubnets",
+                          [32m+[0m[0m "elasticloadbalancing:DeleteLoadBalancer",
+                          [32m+[0m[0m "elasticloadbalancing:ModifyTargetGroup",
+                          [32m+[0m[0m "elasticloadbalancing:ModifyTargetGroupAttributes",
+                          [32m+[0m[0m "elasticloadbalancing:DeleteTargetGroup",
+                          [32m+[0m[0m "elasticloadbalancing:ModifyListenerAttributes",
+                          [32m+[0m[0m "elasticloadbalancing:ModifyCapacityReservation",
+                          [32m+[0m[0m "elasticloadbalancing:ModifyIpPools",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m Null = {
+                              [32m+[0m[0m "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = "*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "elasticloadbalancing:AddTags",
+                        ]
+                      [32m+[0m[0m Condition = {
+                          [32m+[0m[0m Null         = {
+                              [32m+[0m[0m "aws:RequestTag/elbv2.k8s.aws/cluster" = "false"
+                            }
+                          [32m+[0m[0m StringEquals = {
+                              [32m+[0m[0m "elasticloadbalancing:CreateAction" = [
+                                  [32m+[0m[0m "CreateTargetGroup",
+                                  [32m+[0m[0m "CreateLoadBalancer",
+                                ]
+                            }
+                        }
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Resource  = [
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*",
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*",
+                          [32m+[0m[0m "arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*",
+                        ]
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "elasticloadbalancing:RegisterTargets",
+                          [32m+[0m[0m "elasticloadbalancing:DeregisterTargets",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "arn:aws:elasticloadbalancing:*:*:targetgroup/*/*"
+                    },
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action   = [
+                          [32m+[0m[0m "elasticloadbalancing:SetWebAcl",
+                          [32m+[0m[0m "elasticloadbalancing:ModifyListener",
+                          [32m+[0m[0m "elasticloadbalancing:AddListenerCertificates",
+                          [32m+[0m[0m "elasticloadbalancing:RemoveListenerCertificates",
+                          [32m+[0m[0m "elasticloadbalancing:ModifyRule",
+                          [32m+[0m[0m "elasticloadbalancing:SetRulePriorities",
+                        ]
+                      [32m+[0m[0m Effect   = "Allow"
+                      [32m+[0m[0m Resource = "*"
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m policy_id        = (known after apply)
+      [32m+[0m[0m tags_all         = (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.capability["argocd"][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "capability" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "sts:AssumeRole",
+                          [32m+[0m[0m "sts:TagSession",
+                        ]
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "capabilities.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-capability-argocd-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-capability-argocd-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-capability-argocd-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.cluster[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "cluster" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-eks-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-eks-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-eks-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.ebs_csi_driver[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "ebs_csi_driver" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = (known after apply)
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-ebs-csi-driver-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-ebs-csi-driver-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-ebs-csi-driver-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.efs_csi_driver[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "efs_csi_driver" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "sts:AssumeRole",
+                          [32m+[0m[0m "sts:TagSession",
+                        ]
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "pods.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-efs-csi-driver-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-efs-csi-driver-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-efs-csi-driver-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.external_dns[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "external_dns" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "sts:AssumeRole",
+                          [32m+[0m[0m "sts:TagSession",
+                        ]
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "pods.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-external-dns-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-external-dns-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-external-dns-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.karpenter_controller[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "karpenter_controller" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "sts:AssumeRole",
+                          [32m+[0m[0m "sts:TagSession",
+                        ]
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "pods.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-karpenter-controller-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-karpenter-controller-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-karpenter-controller-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.karpenter_node[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "karpenter_node" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-karpenter-node-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-karpenter-node-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-karpenter-node-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.lb_controller[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "lb_controller" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = [
+                          [32m+[0m[0m "sts:AssumeRole",
+                          [32m+[0m[0m "sts:TagSession",
+                        ]
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "pods.eks.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-lb-controller-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-lb-controller-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-lb-controller-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role.node_group[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role" "node_group" {
+      [32m+[0m[0m arn                   = (known after apply)
+      [32m+[0m[0m assume_role_policy    = jsonencode(
+            {
+              [32m+[0m[0m Statement = [
+                  [32m+[0m[0m {
+                      [32m+[0m[0m Action    = "sts:AssumeRole"
+                      [32m+[0m[0m Effect    = "Allow"
+                      [32m+[0m[0m Principal = {
+                          [32m+[0m[0m Service = "ec2.amazonaws.com"
+                        }
+                    },
+                ]
+              [32m+[0m[0m Version   = "2012-10-17"
+            }
+        )
+      [32m+[0m[0m create_date           = (known after apply)
+      [32m+[0m[0m force_detach_policies = false
+      [32m+[0m[0m id                    = (known after apply)
+      [32m+[0m[0m managed_policy_arns   = (known after apply)
+      [32m+[0m[0m max_session_duration  = 3600
+      [32m+[0m[0m name                  = "internal-psi-monitoring-production-node-group-role"
+      [32m+[0m[0m name_prefix           = (known after apply)
+      [32m+[0m[0m path                  = "/"
+      [32m+[0m[0m tags                  = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-node-group-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all              = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-node-group-role"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m unique_id             = (known after apply)
+
+      [32m+[0m[0m inline_policy (known after apply)
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.cluster_amazon_eks_cluster_policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "cluster_amazon_eks_cluster_policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-eks-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.ebs_csi_driver_policy[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "ebs_csi_driver_policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-ebs-csi-driver-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.efs_csi_driver[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "efs_csi_driver" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-efs-csi-driver-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.external_dns[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "external_dns" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-external-dns-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.karpenter_controller[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "karpenter_controller" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-karpenter-controller-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.karpenter_node_cni[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "karpenter_node_cni" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-karpenter-node-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.karpenter_node_registry[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "karpenter_node_registry" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-karpenter-node-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.karpenter_node_ssm[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "karpenter_node_ssm" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-karpenter-node-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.karpenter_node_worker[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "karpenter_node_worker" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-karpenter-node-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.lb_controller[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "lb_controller" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = (known after apply)
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-lb-controller-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryReadOnly[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryReadOnly" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-node-group-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-node-group-role"
+    }
+
+[1m  # module.eks.aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy[0m will be created
+[0m  [32m+[0m[0m resource "aws_iam_role_policy_attachment" "node_AmazonEKS_CNI_Policy" {
+      [32m+[0m[0m id         = (known after apply)
+      [32m+[0m[0m policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      [32m+[0m[0m role       = "internal-psi-monitoring-production-node-group-role"
+    }
+
+[1m  # module.eks.aws_security_group.efs[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_security_group" "efs" {
+      [32m+[0m[0m arn                    = (known after apply)
+      [32m+[0m[0m description            = "Allow NFS traffic from EKS VPC"
+      [32m+[0m[0m egress                 = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_blocks      = [
+                  [32m+[0m[0m "0.0.0.0/0",
+                ]
+              [32m+[0m[0m from_port        = 0
+              [32m+[0m[0m ipv6_cidr_blocks = []
+              [32m+[0m[0m prefix_list_ids  = []
+              [32m+[0m[0m protocol         = "-1"
+              [32m+[0m[0m security_groups  = []
+              [32m+[0m[0m self             = false
+              [32m+[0m[0m to_port          = 0
+                [90m# (1 unchanged attribute hidden)[0m[0m
+            },
+        ]
+      [32m+[0m[0m id                     = (known after apply)
+      [32m+[0m[0m ingress                = [
+          [32m+[0m[0m {
+              [32m+[0m[0m cidr_blocks      = (known after apply)
+              [32m+[0m[0m description      = "NFS from VPC"
+              [32m+[0m[0m from_port        = 2049
+              [32m+[0m[0m ipv6_cidr_blocks = []
+              [32m+[0m[0m prefix_list_ids  = []
+              [32m+[0m[0m protocol         = "tcp"
+              [32m+[0m[0m security_groups  = []
+              [32m+[0m[0m self             = false
+              [32m+[0m[0m to_port          = 2049
+            },
+        ]
+      [32m+[0m[0m name                   = "internal-psi-monitoring-production-efs-sg"
+      [32m+[0m[0m name_prefix            = (known after apply)
+      [32m+[0m[0m owner_id               = (known after apply)
+      [32m+[0m[0m region                 = "us-east-2"
+      [32m+[0m[0m revoke_rules_on_delete = false
+      [32m+[0m[0m tags                   = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-efs-sg"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m tags_all               = {
+          [32m+[0m[0m "Name"                 = "internal-psi-monitoring-production-efs-sg"
+          [32m+[0m[0m "psi_application_name" = "internal_psi_monitoring"
+          [32m+[0m[0m "psi_application_type" = "shared_service"
+          [32m+[0m[0m "psi_cost_center"      = "internal"
+          [32m+[0m[0m "psi_environment"      = "production"
+          [32m+[0m[0m "psi_lifecycle"        = "active"
+          [32m+[0m[0m "psi_managed_by"       = "terraform"
+          [32m+[0m[0m "psi_source_repo"      = "psi-terraform"
+        }
+      [32m+[0m[0m vpc_id                 = (known after apply)
+    }
+
+[1mPlan:[0m 47 to add, 0 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [32m+[0m[0m argocd_url                         = "ArgoCD not configured"
+  [32m+[0m[0m cluster_arn                        = (known after apply)
+  [32m+[0m[0m cluster_certificate_authority_data = (known after apply)
+  [32m+[0m[0m cluster_endpoint                   = (known after apply)
+  [32m+[0m[0m cluster_name                       = "internal-psi-monitoring-production-eks"
+  [32m+[0m[0m cluster_security_group_id          = (known after apply)
+  [32m+[0m[0m configure_kubectl                  = "aws eks --region us-east-2 update-kubeconfig --name internal-psi-monitoring-production-eks"
+  [32m+[0m[0m efs_file_system_id                 = (known after apply)
+  [32m+[0m[0m karpenter_node_role_name           = "internal-psi-monitoring-production-karpenter-node-role"
+  [32m+[0m[0m vpc_id                             = (known after apply)
+[90m
+─────────────────────────────────────────────────────────────────────────────[0m
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.
+Releasing state lock. This may take a few moments...
