@@ -146,3 +146,20 @@ variable "access_entries" {
   }))
   default = {}
 }
+
+variable "capabilities" {
+  description = "Map of EKS capabilities to enable (e.g., argocd). Keys are capability names."
+  type = map(object({
+    version = optional(string)
+    configuration = optional(object({
+      admin_enabled = optional(bool, true)
+      aws_idc = optional(object({
+        idc_instance_arn = string
+        idc_region       = string
+      }))
+    }))
+    role_arn                  = optional(string)
+    delete_propagation_policy = optional(string, "RETAIN")
+  }))
+  default = {}
+}

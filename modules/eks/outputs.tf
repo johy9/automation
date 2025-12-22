@@ -72,3 +72,8 @@ output "cluster_security_group_id" {
   description = "Security Group ID attached to the EKS Cluster"
   value       = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
 }
+
+output "capabilities" {
+  description = "Map of enabled EKS capabilities"
+  value       = aws_eks_capability.this
+}
