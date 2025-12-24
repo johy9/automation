@@ -170,12 +170,11 @@ jobs:
           echo "tfvars_var_name=${ENV_UPPER}_TFVARS" >> $GITHUB_OUTPUT
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4 # Using the latest v4
         with:
           aws-region: us-east-1
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+  
       - name: Get Caller Identity
         run: |
           ARN=$(aws sts get-caller-identity --query Arn --output text)

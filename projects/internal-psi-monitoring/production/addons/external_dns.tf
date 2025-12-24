@@ -28,7 +28,7 @@ resource "helm_release" "external_dns" {
 
   set {
     name  = "policy"
-    value = "sync" # Syncs records (creates and deletes)
+    value = "upsert-only" # create and update, but not delete
   }
 
   set {
@@ -39,6 +39,11 @@ resource "helm_release" "external_dns" {
   set {
     name  = "zoneIdFilters[0]"
     value = var.route53_zone_id
+  }
+
+  set {
+    name  = "registry"
+    value = "txt"
   }
 
   set {
