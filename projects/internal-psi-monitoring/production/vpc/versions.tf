@@ -2,14 +2,14 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.0.0"
+      version = ">= 5.83.0"
     }
   }
 
   required_version = ">= 1.11.0"
 
   backend "s3" {
-    bucket       = "ringcentral-terraform-states"
+    bucket       = "oyegokeodev-terraform-states"
     key          = "internal-psi-monitoring/production/vpc/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
