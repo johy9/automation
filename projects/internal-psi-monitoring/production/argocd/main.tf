@@ -191,11 +191,8 @@ resource "helm_release" "argocd" {
             "alb.ingress.kubernetes.io/scheme"               = "internet-facing"
             "alb.ingress.kubernetes.io/target-type"          = "ip"
             "alb.ingress.kubernetes.io/group.name"           = "central-eks-alb"
-            "alb.ingress.kubernetes.io/healthcheck-path"     = "/healthz"
-            "alb.ingress.kubernetes.io/success-codes"        = "200"
-            "alb.ingress.kubernetes.io/healthcheck-protocol" = "HTTP"
-            "alb.ingress.kubernetes.io/backend-protocol"     = "HTTPS"
-            "alb.ingress.kubernetes.io/ssl-redirect"         = "443"
+            # Health check annotations removed as requested
+            # Backend protocol and ssl-redirect annotations remain if needed for traffic, but health check config is removed
             "alb.ingress.kubernetes.io/subnets"              = join(",", data.terraform_remote_state.vpc.outputs.private_subnet_ids)
             "alb.ingress.kubernetes.io/certificate-arn"      = var.certificate_arn
             "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
