@@ -81,14 +81,14 @@ data "aws_caller_identity" "current" {}
 resource "aws_iam_role" "argocd_controller" {
   name = "argocd-controller-role"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
+    "Version": "2012-10-17",
+    "Statement": [
       {
-        Effect = "Allow"
-        Principal = {
-          Service = "pods.eks.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "pods.eks.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
       }
     ]
   })
