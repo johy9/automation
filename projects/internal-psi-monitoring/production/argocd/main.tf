@@ -1,4 +1,25 @@
 # -----------------------------------------------------------------------------
+# Remote State Data Sources
+# -----------------------------------------------------------------------------
+
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+  config = {
+    bucket = "oyegokeo-terraform-states"
+    key    = "internal-psi-monitoring/production/vpc/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+data "terraform_remote_state" "eks" {
+  backend = "s3"
+  config = {
+    bucket = "oyegokeo-terraform-states"
+    key    = "internal-psi-monitoring/production/eks/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+# -----------------------------------------------------------------------------
 # IAM Policy for ArgoCD Controller
 # -----------------------------------------------------------------------------
 resource "kubernetes_service_account" "argocd_controller" {
@@ -103,22 +124,22 @@ provider "aws" {
 }
 
 provider "kubernetes" {
-  host                   = var.cluster_endpoint
-  cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
+  host                   = data.terraform_remote_state.eks.outputs.cluster_endpoint
+  cluster_ca_certificate = base64decode(data.terraform_remote_state.eks.outputs.cluster_certificate_authority_data)
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", var.cluster_name, "--region", var.region]
+    args        = ["eks", "get-token", "--cluster-name", data.terraform_remote_state.eks.outputs.cluster_name, "--region", var.region]
     command     = "aws"
   }
 }
 
 provider "helm" {
-  kubernetes {
-    host                   = var.cluster_endpoint
-    cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
-    exec {
+  kubernetes = {
+    host                   = data.terraform_remote_state.eks.outputs.cluster_endpoint
+    cluster_ca_certificate = base64decode(data.terraform_remote_state.eks.outputs.cluster_certificate_authority_data)
+    exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
-      args        = ["eks", "get-token", "--cluster-name", var.cluster_name, "--region", var.region]
+      args        = ["eks", "get-token", "--cluster-name", data.terraform_remote_state.eks.outputs.cluster_name, "--region", var.region]
       command     = "aws"
     }
   }
@@ -153,7 +174,7 @@ resource "helm_release" "argocd" {
         domain = "games.oyegokeodev.com"
       }
       controller = {
-        replicas  = var.controller_replicas
+        replicas = var.controller_replicas
         resources = var.controller_resources
         serviceAccount = {
           create = false
@@ -173,7 +194,7 @@ resource "helm_release" "argocd" {
             "alb.ingress.kubernetes.io/group.name"       = "central-eks-alb"
             "alb.ingress.kubernetes.io/healthcheck-path" = "/healthz"
             "alb.ingress.kubernetes.io/success-codes"    = "200"
-            "alb.ingress.kubernetes.io/subnets"          = join(",", var.private_subnet_ids)
+            "alb.ingress.kubernetes.io/subnets"          = join(",", data.terraform_remote_state.vpc.outputs.private_subnet_ids)
             "alb.ingress.kubernetes.io/certificate-arn"  = var.certificate_arn
             "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
               Type = "redirect"
@@ -185,22 +206,6 @@ resource "helm_release" "argocd" {
             })
           }
         }
-      }
-      repoServer = {
-        replicas  = var.repo_server_replicas
-        resources = var.repo_server_resources
-      }
-      redis = {
-        replicas = var.redis_ha_replicas
-      }
-      applicationSet = {
-        replicas = var.applicationset_replicas
-      }
-      metrics = {
-        enabled = var.enable_metrics
-      }
-      notifications = {
-        enabled = var.enable_notifications
       }
     })
   ]
