@@ -1,4 +1,100 @@
 # -----------------------------------------------------------------------------
+# IAM Policy for ArgoCD Controller
+# -----------------------------------------------------------------------------
+resource "kubernetes_service_account" "argocd_controller" {
+  metadata {
+    name      = "argocd-application-controller"
+    namespace = var.argocd_namespace
+    labels = {
+      "app.kubernetes.io/name" = "argocd-application-controller"
+    }
+  }
+}
+
+resource "aws_iam_policy" "argocd_controller" {
+  name        = "argocd-controller-policy"
+  description = "Policy for ArgoCD controller to access Secrets Manager, SSM, and ECR"
+  policy      = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecrets"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:DescribeRepositories",
+          "ecr:ListImages",
+          "ecr:DescribeImages"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# -----------------------------------------------------------------------------
+# IAM Role for ArgoCD Controller (Pod Identity)
+# -----------------------------------------------------------------------------
+
+data "aws_caller_identity" "current" {}
+
+resource "aws_iam_role" "argocd_controller" {
+  name = "argocd-controller-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "pods.eks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+        Condition = {
+          StringEquals = {
+            "aws:ResourceAccount" = data.aws_caller_identity.current.account_id
+          }
+        }
+      }
+    ]
+  })
+  tags = var.additional_tags
+}
+
+resource "aws_iam_role_policy_attachment" "argocd_controller" {
+  role       = aws_iam_role.argocd_controller.name
+  policy_arn = aws_iam_policy.argocd_controller.arn
+}
+
+# -----------------------------------------------------------------------------
+# Pod Identity Association (EKS)
+# -----------------------------------------------------------------------------
+
+resource "aws_eks_pod_identity_association" "argocd_controller" {
+  cluster_name    = var.cluster_name
+  namespace       = var.argocd_namespace
+  service_account = "argocd-application-controller"
+  role_arn        = aws_iam_role.argocd_controller.arn
+}
+# -----------------------------------------------------------------------------
 # Providers
 # -----------------------------------------------------------------------------
 
@@ -59,6 +155,10 @@ resource "helm_release" "argocd" {
       controller = {
         replicas  = var.controller_replicas
         resources = var.controller_resources
+        serviceAccount = {
+          create = false
+          name   = kubernetes_service_account.argocd_controller.metadata[0].name
+        }
       }
       server = {
         replicas  = var.server_replicas
@@ -94,5 +194,8 @@ resource "helm_release" "argocd" {
     })
   ]
 
-  depends_on = [kubernetes_namespace.argocd]
+  depends_on = [
+    kubernetes_namespace.argocd,
+    kubernetes_service_account.argocd_controller
+  ]
 }
