@@ -84,18 +84,15 @@ resource "aws_iam_role" "argocd_controller" {
     "Version": "2012-10-17",
     "Statement": [
       {
+        "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
         "Effect": "Allow",
         "Principal": {
           "Service": "pods.eks.amazonaws.com"
         },
-        "Action": "sts:AssumeRole",
-        "Condition": {
-          "StringEquals": {
-            "eks:cluster-name": var.cluster_name,
-            "eks:pod-namespace": var.argocd_namespace,
-            "eks:service-account": "argocd-application-controller"
-          }
-        }
+        "Action": [
+          "sts:AssumeRole",
+          "sts:TagSession"
+        ]
       }
     ]
   })
