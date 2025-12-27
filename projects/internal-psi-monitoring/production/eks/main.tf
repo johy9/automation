@@ -8,8 +8,8 @@ data "terraform_remote_state" "vpc" {
 }
 
 module "eks" {
-  source = "git::https://github.com/RingCentral-Pro-Services/psi-terraform.git//modules/eks?ref=v1.0.0-eks"
-  # source = "../../../../modules/eks"
+  #source = "git::https://github.com/RingCentral-Pro-Services/psi-terraform.git//modules/eks?ref=v1.0.0-eks"
+  source = "../../../../modules/eks"
 
   project_name = var.project_name
   environment  = var.environment
