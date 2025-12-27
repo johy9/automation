@@ -89,11 +89,6 @@ resource "aws_iam_role" "argocd_controller" {
           Service = "pods.eks.amazonaws.com"
         }
         Action = "sts:AssumeRole"
-        Condition = {
-          StringEquals = {
-            "aws:ResourceAccount" = data.aws_caller_identity.current.account_id
-          }
-        }
       }
     ]
   })
