@@ -149,7 +149,7 @@ provider "helm" {
 # ArgoCD Namespace (optional)
 # -----------------------------------------------------------------------------
 
-resource "kubernetes_namespace" "argocd" {
+resource "kubernetes_namespace_v1" "argocd" {
   count = var.create_namespace ? 1 : 0
   metadata {
     name = var.argocd_namespace
@@ -211,7 +211,7 @@ resource "helm_release" "argocd" {
   ]
 
   depends_on = [
-    kubernetes_namespace.argocd,
+    kubernetes_namespace_v1.argocd,
     kubernetes_service_account_v1.argocd_controller
   ]
 }
