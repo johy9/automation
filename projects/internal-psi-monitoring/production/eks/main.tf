@@ -1,7 +1,7 @@
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
-    bucket = "ringcentral-terraform-states"
+    bucket = "oyegokeodev-terraform-states"
     key    = "internal-psi-monitoring/production/vpc/terraform.tfstate"
     region = "us-east-1"
   }
