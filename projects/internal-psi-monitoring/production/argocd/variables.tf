@@ -3,14 +3,13 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "region" {
-  description = "AWS region"
-  type        = string
-  default     = "us-east-2"
-}
-
 variable "vpc_id" {
   description = "VPC ID"
+  type        = string
+}
+
+variable "region" {
+  description = "AWS region"
   type        = string
 }
 
@@ -22,20 +21,18 @@ variable "private_subnet_ids" {
 variable "argocd_namespace" {
   description = "Namespace for ArgoCD"
   type        = string
-  default     = "argocd"
 }
 
+variable "create_namespace" {
+  description = "Whether to create the namespace"
+  type        = bool
+}
 variable "argocd_chart_version" {
   description = "ArgoCD Helm chart version"
   type        = string
   default     = "7.7.3"
 }
 
-variable "create_namespace" {
-  description = "Whether to create the namespace"
-  type        = bool
-  default     = true
-}
 
 variable "controller_replicas" {
   description = "Application controller replicas"
@@ -242,36 +239,8 @@ variable "additional_tags" {
   type        = map(string)
   default     = {}
 }
-variable "cluster_name" {
-  description = "EKS cluster name"
-  type        = string
-  default     = ""
-}
 
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
-}
 
-variable "private_subnet_ids" {
-  description = "List of private subnet IDs"
-  type        = list(string)
-}
 
-variable "region" {
-  description = "AWS region"
-  type        = string
-  default     = "us-east-2"
-}
 
-variable "argocd_namespace" {
-  description = "namespace for ArgoCD"
-  type        = string
-  default     = "argocd"
-}
 
-variable "create_namespace" {
-  description = "Wether to create the namespace"
-  type        = bool
-  default     = true
-}
