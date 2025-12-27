@@ -81,15 +81,15 @@ data "aws_caller_identity" "current" {}
 resource "aws_iam_role" "argocd_controller" {
   name = "argocd-controller-role"
   assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Sid": "AllowEksAuthToAssumeRoleForPodIdentity",
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "pods.eks.amazonaws.com"
+        "Sid" : "AllowEksAuthToAssumeRoleForPodIdentity",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "pods.eks.amazonaws.com"
         },
-        "Action": [
+        "Action" : [
           "sts:AssumeRole",
           "sts:TagSession"
         ]
@@ -173,7 +173,7 @@ resource "helm_release" "argocd" {
         domain = "games.oyegokeodev.com"
       }
       controller = {
-        replicas = var.controller_replicas
+        replicas  = var.controller_replicas
         resources = var.controller_resources
         serviceAccount = {
           create = false
@@ -187,17 +187,17 @@ resource "helm_release" "argocd" {
           enabled = true
           hosts   = ["games.oyegokeodev.com"]
           annotations = {
-            "kubernetes.io/ingress.class"                = "alb"
-            "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
-            "alb.ingress.kubernetes.io/target-type"      = "ip"
-            "alb.ingress.kubernetes.io/group.name"       = "central-eks-alb"
-            "alb.ingress.kubernetes.io/healthcheck-path" = "/healthz"
-            "alb.ingress.kubernetes.io/success-codes"    = "200"
+            "kubernetes.io/ingress.class"                    = "alb"
+            "alb.ingress.kubernetes.io/scheme"               = "internet-facing"
+            "alb.ingress.kubernetes.io/target-type"          = "ip"
+            "alb.ingress.kubernetes.io/group.name"           = "central-eks-alb"
+            "alb.ingress.kubernetes.io/healthcheck-path"     = "/healthz"
+            "alb.ingress.kubernetes.io/success-codes"        = "200"
             "alb.ingress.kubernetes.io/healthcheck-protocol" = "HTTP"
-            "alb.ingress.kubernetes.io/backend-protocol" = "HTTPS"
-            "alb.ingress.kubernetes.io/ssl-redirect" = "443"
-            "alb.ingress.kubernetes.io/subnets"          = join(",", data.terraform_remote_state.vpc.outputs.private_subnet_ids)
-            "alb.ingress.kubernetes.io/certificate-arn"  = var.certificate_arn
+            "alb.ingress.kubernetes.io/backend-protocol"     = "HTTPS"
+            "alb.ingress.kubernetes.io/ssl-redirect"         = "443"
+            "alb.ingress.kubernetes.io/subnets"              = join(",", data.terraform_remote_state.vpc.outputs.private_subnet_ids)
+            "alb.ingress.kubernetes.io/certificate-arn"      = var.certificate_arn
             "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
               Type = "redirect"
               RedirectConfig = {

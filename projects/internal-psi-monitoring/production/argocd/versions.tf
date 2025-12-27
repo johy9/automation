@@ -8,7 +8,7 @@ terraform {
     use_lockfile = true
     encrypt      = true
   }
-  
+
   required_version = ">= 1.11.0"
 
   required_providers {
