@@ -21,7 +21,8 @@ terraform {
   required_version = ">= 1.11.0"
 
   backend "s3" {
-    bucket       = "ringcentral-terraform-states"
+    bucket       = "oyegokeodev-terraform-states"
+    # bucket       = "ringcentral-terraform-states"
     key          = "internal-psi-monitoring/production/addons/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
