@@ -29,6 +29,7 @@ on:
           - vpc
           - eks
           - addons
+          - argocd
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
