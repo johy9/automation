@@ -187,14 +187,44 @@ resource "helm_release" "argocd" {
           enabled = true
           hosts   = ["games.oyegokeodev.com"]
           annotations = {
-            "kubernetes.io/ingress.class"                    = "alb"
-            "alb.ingress.kubernetes.io/scheme"               = "internet-facing"
-            "alb.ingress.kubernetes.io/target-type"          = "ip"
-            "alb.ingress.kubernetes.io/group.name"           = "central-eks-alb"
-            # Health check annotations removed as requested
-            # Backend protocol and ssl-redirect annotations remain if needed for traffic, but health check config is removed
-            "alb.ingress.kubernetes.io/subnets"              = join(",", data.terraform_remote_state.vpc.outputs.private_subnet_ids)
-            "alb.ingress.kubernetes.io/certificate-arn"      = var.certificate_arn
+            "alb.ingress.kubernetes.io/listen-ports" = jsonencode([
+              { HTTP = 80 },
+              { HTTPS = 443 }
+            ])
+            "kubernetes.io/ingress.class"           = "alb"
+            "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
+            "alb.ingress.kubernetes.io/target-type" = "ip"
+            "alb.ingress.kubernetes.io/group.name"  = "central-eks-alb"
+
+            # -----------------------------------------------------------------
+            # 1. CRITICAL: Backend Protocol
+            # ArgoCD server listens on HTTPS by default. We must tell the ALB
+            # to talk to the pods using HTTPS, not HTTP.
+            # -----------------------------------------------------------------
+            "alb.ingress.kubernetes.io/backend-protocol" = "HTTPS"
+
+            # -----------------------------------------------------------------
+            # 2. CRITICAL: Health Checks
+            # Since the backend is HTTPS, the health check must be HTTPS too.
+            # We also point to the specific ArgoCD health endpoint.
+            # -----------------------------------------------------------------
+            "alb.ingress.kubernetes.io/healthcheck-protocol" = "HTTPS"
+            "alb.ingress.kubernetes.io/healthcheck-path"     = "/healthz"
+            "alb.ingress.kubernetes.io/success-codes"        = "200"
+
+            # -----------------------------------------------------------------
+            # 3. CRITICAL: Subnet Configuration
+            # An "internet-facing" ALB must reside in PUBLIC subnets to receive
+            # traffic from the internet. The *targets* (pods) can be in private
+            # subnets, but the ALB itself must be in public ones.
+            #
+            # Please verify your VPC remote state has an output named 
+            # 'public_subnet_ids'. If you force an internet-facing ALB into 
+            # private subnets, it will fail to route or provision correctly.
+            # -----------------------------------------------------------------
+            "alb.ingress.kubernetes.io/subnets" = join(",", data.terraform_remote_state.vpc.outputs.public_subnet_ids)
+
+            "alb.ingress.kubernetes.io/certificate-arn" = var.certificate_arn
             "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
               Type = "redirect"
               RedirectConfig = {
