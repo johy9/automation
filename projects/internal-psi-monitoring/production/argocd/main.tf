@@ -22,7 +22,7 @@ data "terraform_remote_state" "eks" {
 # -----------------------------------------------------------------------------
 # IAM Policy for ArgoCD Controller
 # -----------------------------------------------------------------------------
-resource "kubernetes_service_account" "argocd_controller" {
+resource "kubernetes_service_account_v1" "argocd_controller" {
   metadata {
     name      = "argocd-application-controller"
     namespace = var.argocd_namespace
@@ -178,7 +178,7 @@ resource "helm_release" "argocd" {
         resources = var.controller_resources
         serviceAccount = {
           create = false
-          name   = kubernetes_service_account.argocd_controller.metadata[0].name
+          name   = kubernetes_service_account_v1.argocd_controller.metadata[0].name
         }
       }
       server = {
@@ -212,6 +212,6 @@ resource "helm_release" "argocd" {
 
   depends_on = [
     kubernetes_namespace.argocd,
-    kubernetes_service_account.argocd_controller
+    kubernetes_service_account_v1.argocd_controller
   ]
 }
