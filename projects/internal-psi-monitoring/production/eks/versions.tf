@@ -9,7 +9,7 @@ terraform {
   required_version = ">= 1.11.0"
 
   backend "s3" {
-    bucket       = "oyegokeo-terraform-states"
+    bucket = "oyegokeo-terraform-states"
     # bucket       = "ringcentral-terraform-states"
     key          = "internal-psi-monitoring/production/eks/terraform.tfstate"
     region       = "us-east-1"

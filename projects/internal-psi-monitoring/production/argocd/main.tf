@@ -14,7 +14,7 @@ resource "kubernetes_service_account" "argocd_controller" {
 resource "aws_iam_policy" "argocd_controller" {
   name        = "argocd-controller-policy"
   description = "Policy for ArgoCD controller to access Secrets Manager, SSM, and ECR"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -150,7 +150,7 @@ resource "helm_release" "argocd" {
   values = [
     yamlencode({
       global = {
-        domain = var.argocd_domain
+        domain = "games.oyegokeodev.com"
       }
       controller = {
         replicas  = var.controller_replicas
@@ -165,13 +165,24 @@ resource "helm_release" "argocd" {
         resources = var.server_resources
         ingress = {
           enabled = true
-          hosts   = [var.argocd_domain]
+          hosts   = ["games.oyegokeodev.com"]
           annotations = {
-            "kubernetes.io/ingress.class"               = "alb"
-            "alb.ingress.kubernetes.io/scheme"          = "internet-facing"
-            "alb.ingress.kubernetes.io/target-type"     = "ip"
-            "alb.ingress.kubernetes.io/subnets"         = join(",", var.private_subnet_ids)
-            "alb.ingress.kubernetes.io/certificate-arn" = var.certificate_arn
+            "kubernetes.io/ingress.class"                = "alb"
+            "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
+            "alb.ingress.kubernetes.io/target-type"      = "ip"
+            "alb.ingress.kubernetes.io/group.name"       = "central-eks-alb"
+            "alb.ingress.kubernetes.io/healthcheck-path" = "/healthz"
+            "alb.ingress.kubernetes.io/success-codes"    = "200"
+            "alb.ingress.kubernetes.io/subnets"          = join(",", var.private_subnet_ids)
+            "alb.ingress.kubernetes.io/certificate-arn"  = var.certificate_arn
+            "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
+              Type = "redirect"
+              RedirectConfig = {
+                Protocol   = "HTTPS"
+                Port       = "443"
+                StatusCode = "HTTP_301"
+              }
+            })
           }
         }
       }

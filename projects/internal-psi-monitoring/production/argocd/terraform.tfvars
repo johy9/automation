@@ -1,7 +1,7 @@
-cluster_name       = "some-cluster-eks"
-vpc_id             = "some_id"
+cluster_name       = "internal-psi-monitoring-production-eks"
+vpc_id             = "vpc-0b9c020b8207288a1"
 region             = "us-east-2"
-private_subnet_ids = ["jsjsj", "hshhs", "sjsjsk"]
+private_subnet_ids = ["subnet-081dd9c715ea9317e", "subnet-02a7fc8d55f6bb0be", "subnet-0afb268fbd970d75a"]
 
 argocd_namespace     = "argocd"
 argocd_chart_version = "7.7.3"
@@ -13,9 +13,9 @@ repo_server_replicas    = 3
 redis_ha_replicas       = 3
 applicationset_replicas = 2
 
-argocd_domain      = "argocd.example.com"
-route53_zone_id    = "Z1234567890ABC"
-certificate_arn    = ""    # If you have an ACM cert, add ARN
+argocd_domain      = "games.oyegokeodev.com"
+route53_zone_id    = "Z04422903TL2OJKQ4IG26"
+certificate_arn    = "arn:aws:acm:us-east-2:172316546414:certificate/71a02a73-170c-40cc-aad3-f86897a0290d"
 create_certificate = false # Set true to create ACM cert
 
 enable_okta_auth     = true
