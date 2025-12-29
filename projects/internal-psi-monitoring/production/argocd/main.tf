@@ -179,6 +179,23 @@ resource "helm_release" "argocd" {
           create = false
           name   = kubernetes_service_account_v1.argocd_controller.metadata[0].name
         }
+        affinity = {
+          podAntiAffinity = {
+            preferredDuringSchedulingIgnoredDuringExecution = [
+              {
+                weight = 100
+                podAffinityTerm = {
+                  labelSelector = {
+                    matchLabels = {
+                      "app.kubernetes.io/name" = "argocd-application-controller"
+                    }
+                  }
+                  topologyKey = "kubernetes.io/hostname"
+                }
+              }
+            ]
+          }
+        }
       }
       server = {
         replicas  = var.server_replicas
