@@ -109,7 +109,7 @@ resource "aws_iam_role_policy_attachment" "argocd_controller" {
 # -----------------------------------------------------------------------------
 
 resource "aws_eks_pod_identity_association" "argocd_controller" {
-  cluster_name    = var.cluster_name
+  cluster_name    = data.terraform_remote_state.eks.outputs.cluster_name
   namespace       = var.argocd_namespace
   service_account = "argocd-application-controller"
   role_arn        = aws_iam_role.argocd_controller.arn
