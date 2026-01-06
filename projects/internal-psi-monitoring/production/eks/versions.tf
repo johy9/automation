@@ -11,7 +11,7 @@ terraform {
   backend "s3" {
     bucket = "oyegokeo-terraform-states"
     # bucket       = "ringcentral-terraform-states"
-    key          = "internal-psi-monitoring/production/eks/terraform.tfstate"
+    key          = "internal-psi-monitoring/production/ekss/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
     encrypt      = true
