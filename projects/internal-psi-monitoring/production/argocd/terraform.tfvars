@@ -1,10 +1,7 @@
-cluster_name       = "internal-psi-monitoring-production-eks"
-vpc_id             = "vpc-0b9c020b8207288a1"
 region             = "us-east-2"
-private_subnet_ids = ["subnet-081dd9c715ea9317e", "subnet-02a7fc8d55f6bb0be", "subnet-0afb268fbd970d75a"]
 
 argocd_namespace     = "argocd"
-argocd_chart_version = "7.7.3"
+argocd_chart_version = "9.1.10"
 create_namespace     = true
 
 controller_replicas     = 3
@@ -19,9 +16,9 @@ certificate_arn    = "arn:aws:acm:us-east-2:172316546414:certificate/71a02a73-17
 create_certificate = false # Set true to create ACM cert
 
 enable_okta_auth     = true
-okta_issuer_url      = "https://yourcompany.okta.com"
-okta_client_id       = "your-okta-client-id"
-okta_client_secret   = "your-okta-client-secret"
+okta_issuer_url      = "" #https://yourcompany.okta.com
+okta_client_id       = ""
+okta_client_secret   = ""
 enable_github_auth   = false
 github_org           = ""
 github_client_id     = ""

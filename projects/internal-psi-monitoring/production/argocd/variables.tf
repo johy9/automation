@@ -1,21 +1,22 @@
-variable "cluster_name" {
-  description = "EKS cluster name"
-  type        = string
-}
+# variable "cluster_name" {
+#   description = "EKS cluster name"
+#   type        = string
+# }
 
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
-}
+# variable "vpc_id" {
+#   description = "VPC ID"
+#   type        = string
+# }
+
+
+# variable "private_subnet_ids" {
+#   description = "List of private subnet IDs"
+#   type        = list(string)
+# }
 
 variable "region" {
   description = "AWS region"
   type        = string
-}
-
-variable "private_subnet_ids" {
-  description = "List of private subnet IDs"
-  type        = list(string)
 }
 
 variable "argocd_namespace" {

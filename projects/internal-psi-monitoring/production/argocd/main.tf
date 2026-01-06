@@ -109,7 +109,7 @@ resource "aws_iam_role_policy_attachment" "argocd_controller" {
 # -----------------------------------------------------------------------------
 
 resource "aws_eks_pod_identity_association" "argocd_controller" {
-  cluster_name    = var.cluster_name
+  cluster_name    = data.terraform_remote_state.eks.outputs.cluster_name
   namespace       = var.argocd_namespace
   service_account = "argocd-application-controller"
   role_arn        = aws_iam_role.argocd_controller.arn
@@ -179,6 +179,23 @@ resource "helm_release" "argocd" {
           create = false
           name   = kubernetes_service_account_v1.argocd_controller.metadata[0].name
         }
+        affinity = {
+          podAntiAffinity = {
+            preferredDuringSchedulingIgnoredDuringExecution = [
+              {
+                weight = 100
+                podAffinityTerm = {
+                  labelSelector = {
+                    matchLabels = {
+                      "app.kubernetes.io/name" = "argocd-application-controller"
+                    }
+                  }
+                  topologyKey = "kubernetes.io/hostname"
+                }
+              }
+            ]
+          }
+        }
       }
       server = {
         replicas  = var.server_replicas
@@ -187,52 +204,27 @@ resource "helm_release" "argocd" {
           enabled = true
           hosts   = ["games.oyegokeodev.com"]
           annotations = {
+            "kubernetes.io/ingress.class"           = "alb"
+            "alb.ingress.kubernetes.io/group.name"  = "central-eks-alb"
+            "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
+            "alb.ingress.kubernetes.io/target-type" = "ip"
+
+            # 1. Listen Ports (Open 80 and 443)
             "alb.ingress.kubernetes.io/listen-ports" = jsonencode([
               { HTTP = 80 },
               { HTTPS = 443 }
             ])
-            "kubernetes.io/ingress.class"           = "alb"
-            "alb.ingress.kubernetes.io/scheme"      = "internet-facing"
-            "alb.ingress.kubernetes.io/target-type" = "ip"
-            "alb.ingress.kubernetes.io/group.name"  = "central-eks-alb"
 
-            # -----------------------------------------------------------------
-            # 1. CRITICAL: Backend Protocol
-            # ArgoCD server listens on HTTPS by default. We must tell the ALB
-            # to talk to the pods using HTTPS, not HTTP.
-            # -----------------------------------------------------------------
-            "alb.ingress.kubernetes.io/backend-protocol" = "HTTPS"
+            # 2. THE FIX: Global SSL Redirect
+            "alb.ingress.kubernetes.io/ssl-redirect" = "443"
 
-            # -----------------------------------------------------------------
-            # 2. CRITICAL: Health Checks
-            # Since the backend is HTTPS, the health check must be HTTPS too.
-            # We also point to the specific ArgoCD health endpoint.
-            # -----------------------------------------------------------------
+            # 3. Backend Configuration (Keep these!)
+            "alb.ingress.kubernetes.io/backend-protocol"     = "HTTPS"
             "alb.ingress.kubernetes.io/healthcheck-protocol" = "HTTPS"
             "alb.ingress.kubernetes.io/healthcheck-path"     = "/healthz"
             "alb.ingress.kubernetes.io/success-codes"        = "200"
-
-            # -----------------------------------------------------------------
-            # 3. CRITICAL: Subnet Configuration
-            # An "internet-facing" ALB must reside in PUBLIC subnets to receive
-            # traffic from the internet. The *targets* (pods) can be in private
-            # subnets, but the ALB itself must be in public ones.
-            #
-            # Please verify your VPC remote state has an output named 
-            # 'public_subnet_ids'. If you force an internet-facing ALB into 
-            # private subnets, it will fail to route or provision correctly.
-            # -----------------------------------------------------------------
-            "alb.ingress.kubernetes.io/subnets" = join(",", data.terraform_remote_state.vpc.outputs.public_subnet_ids)
-
-            "alb.ingress.kubernetes.io/certificate-arn" = var.certificate_arn
-            "alb.ingress.kubernetes.io/actions.ssl-redirect" = jsonencode({
-              Type = "redirect"
-              RedirectConfig = {
-                Protocol   = "HTTPS"
-                Port       = "443"
-                StatusCode = "HTTP_301"
-              }
-            })
+            "alb.ingress.kubernetes.io/subnets"              = join(",", data.terraform_remote_state.vpc.outputs.public_subnet_ids)
+            "alb.ingress.kubernetes.io/certificate-arn"      = var.certificate_arn
           }
         }
       }
