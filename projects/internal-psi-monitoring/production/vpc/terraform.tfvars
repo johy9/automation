@@ -1,4 +1,4 @@
-project_name      = "internal-ps-monitoring"
+project_name      = "internal-psi-monitoring"
 vpc_cidr          = "10.50.0.0/16" # Different CIDR for Prod to avoid confusion
 availability_zone = ["us-east-2a", "us-east-2b", "us-east-2c"]
 
