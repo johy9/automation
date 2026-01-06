@@ -2,7 +2,7 @@ data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
     bucket = "oyegokeo-terraform-states"
-    key    = "internal-psi-monitoring/production/vpcc/terraform.tfstate"
+    key    = "internal-psi-monitoring/production/vpc/terraform.tfstate"
     region = "us-east-1"
   }
 }
