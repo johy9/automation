@@ -1,3 +1,3 @@
-project_name    = "internal-ps-monitoring"
+project_name    = "internal-psi-monitoring"
 environment     = "production"
 cluster_version = "1.33"
